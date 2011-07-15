@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title><%= current_site && current_site.name || I18n.t('txt.beast_title', :default => 'Altered Beast') %><%= " - " + @page_title if @page_title %></title>
-    <%= stylesheet_link_tag %w(display captcha) %>
+    <%= stylesheet_link_tag %w(display captcha syntax) %>
     <%= javascript_include_tag %w(prototype effects lowpro rails application), :cache => "beast" %>
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
