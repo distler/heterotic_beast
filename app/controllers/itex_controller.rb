@@ -20,14 +20,11 @@ class ItexController < ActionController::Metal
       # make sure the result is well-formed, before sending it off
       begin
         xmlparse(doc)
-
       rescue
         self.response_body = error("Ill-formed XML.")
         return
       end
-puts doc.html_safe
       self.response_body = doc
-      self.content_type = 'application/mathml+xml'
       return
     rescue Itex2MML::Error => e
       self.response_body = error(e.to_s)
