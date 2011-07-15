@@ -1,14 +1,20 @@
-require 'redcloth'
+require 'instiki_stringsupport'
+require 'maruku'
+require 'maruku/ext/math'
+require 'sanitizer'
+
 module HtmlFormatting
   protected
+  include Sanitizer
   
   def format_attributes
     self.class.formatted_attributes.each do |attr|
-      raw    = read_attribute attr
-      linked = auto_link(raw) { |text| truncate(text, :length => 50) }
-      textilized = ::RedCloth.new(linked, [:hard_breaks])
-      textilized.hard_breaks = true if textilized.respond_to?("hard_breaks=")
-      write_attribute "#{attr}_html", white_list_sanitizer.sanitize(textilized.to_html)
+      raw  = read_attribute attr
+      html = Maruku.new("\n" + raw.delete("\r").to_utf8,
+             {:math_enabled => true,
+              :math_numbered => ['\\[','\\begin{equation}']}).to_html
+      write_attribute "#{attr}_html", xhtml_sanitize(html.gsub(
+       /\A<div class="maruku_wrapper_div">\n?(.*?)\n?<\/div>\Z/m, '\1') ).html_safe
     end
   end
 end

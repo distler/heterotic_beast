@@ -300,10 +300,10 @@
       delete: Beitrag löschen
       delete_sure: "Diesen Beitrag wirklich löschen?"
       formatting_help: Formatierungshilfe
-      formatting_bold: '*fett*'
+      formatting_bold: '**fett**'
       formatting_italics: '_kursiv_'
-      formatting_blockquote: 'bq. <span>(Zitat)</span>'
-      formatting_list: '* oder # <span>Aufzählungslisten</span>'
+      formatting_blockquote: '&gt; <span>(Zitat)</span>'
+      formatting_list: '* oder 1.  <span>Aufzählungslisten</span>'
 
     moderator:
       zero: Moderator

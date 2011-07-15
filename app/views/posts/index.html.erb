@@ -18,7 +18,7 @@
 <% for post in @posts do %>
 <% unless post == @posts.first %>
 <tr class="spacer">
-  <td colspan="2">&nbsp;</td>
+  <td colspan="2">&#xa0;</td>
 </tr>
 <% end %>
 <tr class="post hentry" id="<%= dom_id post %>">
@@ -35,7 +35,7 @@
   </td>
   <td class="body entry-content">
     <p class="topic">
-      <%= t 'txt.forum', :default => 'Forum' %>: <%= link_to post.forum.name, forum_path(post.forum) %> &ndash;
+      <%= t 'txt.forum', :default => 'Forum' %>: <%= link_to post.forum.name, forum_path(post.forum) %> &#x2013;
       <%= t 'txt.topic', :default => 'Topic' %>: <%= link_to post.topic.title, forum_topic_path(post.forum, post.topic) %>
     </p>
     

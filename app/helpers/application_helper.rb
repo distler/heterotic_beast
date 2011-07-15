@@ -70,4 +70,9 @@ module ApplicationHelper
   def for_moderators_of(record, &block)
     capture(&block) if moderator_of?(record)
   end
+
+  def ajax_spinner_for(id, spinner="spinner.gif")
+    "<img src='/images/#{spinner}' style='display:none; vertical-align:middle;' id='#{id.to_s}_spinner'/> ".html_safe
+  end
+
 end

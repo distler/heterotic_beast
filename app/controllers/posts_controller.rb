@@ -12,7 +12,7 @@ class PostsController < ApplicationController
     @posts = (@parent ? @parent.posts : current_site.posts).search(params[:q], :page => current_page)
     @users = @user ? {@user.id => @user} : User.index_from(@posts)
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { set_content_type_header } # index.html.erb
       format.atom # index.atom.builder
       format.xml  { render :xml  => @posts }
     end
@@ -20,7 +20,10 @@ class PostsController < ApplicationController
 
   def show
     respond_to do |format|
-      format.html { redirect_to forum_topic_path(@forum, @topic) }
+      format.html do
+         set_content_type_header
+         redirect_to forum_topic_path(@forum, @topic)
+      end
       format.xml  do
         find_post
         render :xml  => @post

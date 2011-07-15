@@ -5,6 +5,21 @@
     <title><%= current_site && current_site.name || I18n.t('txt.beast_title', :default => 'Altered Beast') %><%= " - " + @page_title if @page_title %></title>
     <%= stylesheet_link_tag %w(display captcha) %>
     <%= javascript_include_tag %w(prototype effects lowpro rails application), :cache => "beast" %>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    MathML: { useMathMLspacing: true },
+    "HTML-CSS": { scale: 90 }
+  });
+  if (window._onload_fired_) MathJax.Hub.Startup.onload();
+</script>
+<script type="text/javascript">
+  if (!(Prototype.Browser.Gecko || navigator.userAgent.match(/MathPlayer/))) {
+    var s = document.createElement('script');
+    s.src = "<%= compute_public_path('MathJax.js', 'MathJax').split('?')[0] %>?config=MML_HTMLorMML";
+    document.querySelector('head').appendChild(s);
+    window.addEventListener("load", function(){window._onload_fired_ = true} , false);        
+  };
+</script>
     <% @feed_icons.each do |feed| %>
     <%= auto_discovery_link_tag :atom, feed[:url], :title => "Subscribe to '#{feed[:title]}'" %>
     <% end if @feed_icons.present? %>
