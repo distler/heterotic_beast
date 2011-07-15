@@ -1,4 +1,4 @@
-The MIT License (MIT)
+Heterotic Beast, and associated code, is licensed under the MIT License (MIT)
 
 Copyright (c) 2006 - 2011 Josh Goebel, Courtenay Gasking, Rick Olson and Jacques Distler
 
@@ -14,3 +14,8 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+Maruku is GPL2-licensed. If you want an unencumbered software, edit
+
+    lib/html_formatting.rb
+    
+to remove the reference to Maruku, and substitute some other Markdown (or Textile) engine.

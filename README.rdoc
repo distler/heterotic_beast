@@ -1,3 +1,13 @@
+== Heterotic Beast
+
+All the features of Altered Beast, plus
+
+* Markdown syntax (using Maruku instead of RedCloth).
+* Full math support, using itex2MML. Serves MathML to
+  capable browsers, and MathJax to others.
+* Syntax colouring for code blocks.
+* Built-in SVG editing (with embedded equations).
+
 == Altered Beast
 
 The popular rails-based Beast forum, rewritten from the ground up with the same database and views.
@@ -16,16 +26,19 @@ The popular rails-based Beast forum, rewritten from the ground up with the same 
 
 Check out the code via git:
 
-    git clone git://github.com/stiff/altered_beast.git
+    git clone http://golem.ph.utexas.edu/~distler//code/heterotic_beast.git
 
 
 === INSTALLATION
 
-    $ git clone git://github.com/stiff/altered_beast.git
-    $ cd altered_beast
-    $ bundle install
-    $ rake app:bootstrap
+    $ git http://golem.ph.utexas.edu/~distler//code/heterotic_beast.git
+    $ cd heterotic_beast
+    $ ruby bundle install
+    $ ruby bundle exec rake app:bootstrap
 
     Follow the instructions to create your database and load users.
-    Start the application with script/server and visit http://localhost:3000 to 
-    visit your new forum.
+    Start the application with 
+    
+    $ ./beast
+    
+    and visit http://localhost:3000 to visit your new forum.
