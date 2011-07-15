@@ -31,7 +31,7 @@ Check out the code via git:
 
 === INSTALLATION
 
-    $ git http://golem.ph.utexas.edu/~distler//code/heterotic_beast.git
+    $ git clone http://golem.ph.utexas.edu/~distler/code/heterotic_beast.git
     $ cd heterotic_beast
     $ ruby bundle install
     $ ruby bundle exec rake app:bootstrap
