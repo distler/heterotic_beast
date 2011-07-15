@@ -31,6 +31,7 @@ AlteredBeast::Application.routes.draw do
   match '/settings' => 'users#settings', :as => 'settings'
   match '/login' => 'sessions#new', :as => 'login'
   match '/logout' => 'sessions#destroy', :as => 'logout'
+  match '/itex'  => 'itex#index'
 
   resource  :session
 

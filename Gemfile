@@ -5,10 +5,12 @@ gem 'ruby-openid', '>= 2.0.4', :require => "openid"
 gem 'rack-openid'
 gem 'will_paginate', :git => "http://github.com/mislav/will_paginate.git", :branch => "rails3"
 gem "itextomml", ">=1.4.6"
+gem "mongrel", ">=1.2.0.pre2"
 
 gem 'acts_as_list'
 gem 'acts_as_state_machine'
 gem 'permalink_fu'
+gem "nokogiri"
 
 group :development, :test do
   gem 'rspec-rails'
