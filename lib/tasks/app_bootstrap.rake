@@ -24,7 +24,7 @@ namespace :app do
 
     unless !@restart && File.exist?(db_config)
       if @restart || agree("Would you like to create a database.yml file? [y/n]")
-        options = OpenStruct.new :host => 'localhost', :username => 'root', :adapter => 'mysql',
+        options = OpenStruct.new :host => 'localhost', :username => 'root', :adapter => 'mysql2',
           :keys => [:adapter, :host, :database, :username, :password, :socket], :pattern => /_(dev.*|prod.*|test)$/
         class << options
           def get_binding() binding end
