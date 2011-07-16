@@ -9,7 +9,7 @@ module HtmlFormatting
   
   def format_attributes
     self.class.formatted_attributes.each do |attr|
-      raw  = read_attribute attr
+      raw  = (read_attribute attr).purify
       if raw
         html = Maruku.new("\n" + raw.delete("\r").to_utf8,
              {:math_enabled => true,
