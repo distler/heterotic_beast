@@ -11,7 +11,7 @@ class Site < ActiveRecord::Base
   validates_presence_of   :name
   validates_uniqueness_of :host
 
-  attr_readonly :posts_count, :users_count, :topics_count
+  attr_readonly :admin, :posts_count, :users_count, :topics_count
 
   class << self
 
@@ -26,6 +26,11 @@ class Site < ActiveRecord::Base
       sites.reject(&:default?).first || sites.first
     end
 
+  end
+
+
+  def admin
+     User.where(:admin => true).first
   end
 
   def host=(value)

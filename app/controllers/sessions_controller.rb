@@ -21,7 +21,7 @@ class SessionsController < ApplicationController
     cookies.delete :auth_token
     reset_session
     flash[:notice] = I18n.t 'txt.logged_out', :default => "You have been logged out."
-    redirect_back_or_default('/')
+    redirect_back_or_default(:forums)
   end
 
   protected
@@ -65,7 +65,7 @@ class SessionsController < ApplicationController
       new_cookie_flag = (params[:remember_me] == "1")
       handle_remember_cookie! new_cookie_flag
       session[:user_id] = @current_user.id
-      redirect_back_or_default('/')
+      redirect_back_or_default(:forums)
     end
 
     def failed_login(message)

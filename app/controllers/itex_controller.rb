@@ -4,6 +4,7 @@ class ItexController < ActionController::Metal
 
   def index
     tex = (params['tex'] || '').purify.strip
+    self.content_type = 'application/mathml+xml'
     case params['display']
       when 'block'
         filter = :block_filter

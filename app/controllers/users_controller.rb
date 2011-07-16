@@ -22,11 +22,14 @@ class UsersController < ApplicationController
 
   def create
     cookies.delete :auth_token
-    @user = current_site.users.build(params[:user])    
+    @user = params[:user] ?
+             current_site.users.build(params[:user]) :
+             # current_site.users.build(User.where(:email => params[:email]).first.login)    
+             User.where(:email => params[:email]).first
     @user.save if @user.valid?
     @user.register! if @user.valid?
     unless @user.new_record?
-      redirect_back_or_default('/login')
+      redirect_back_or_default(:login)
       flash[:notice] = I18n.t 'txt.activation_required', 
         :default => "Thanks for signing up! Please click the link in your email to activate your account"
     else
@@ -63,7 +66,7 @@ class UsersController < ApplicationController
       current_user.activate!
       flash[:notice] = "Signup complete!"
     end
-    redirect_back_or_default('/')
+    redirect_back_or_default(:forums)
   end
 
   def suspend
@@ -89,7 +92,7 @@ class UsersController < ApplicationController
   end
 
   def make_admin
-    redirect_back_or_default('/') and return unless admin?
+    redirect_back_or_default(:forums) and return unless admin?
     @user = find_user
     @user.admin = (params[:user][:admin] == "1")
     @user.save
@@ -101,7 +104,7 @@ class UsersController < ApplicationController
     def find_user
       @user = if admin?
         current_site.all_users.find params[:id]
-      elsif params[:id] == current_user.id
+      elsif current_user && params[:id] == current_user.id
         current_user
       else
         current_site.users.find params[:id]
