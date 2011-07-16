@@ -33,12 +33,12 @@ Check out the code via git:
 
     $ git clone http://golem.ph.utexas.edu/~distler/code/heterotic_beast.git
     $ cd heterotic_beast
-    $ ruby bundle install
-    $ ruby bundle exec rake app:bootstrap
+    $ bundle --deployment
+    $ bundle exec rake app:bootstrap
 
     Follow the instructions to create your database and load users.
     Start the application with 
     
-    $ ./beast
+    $ script/rails server -d -e production
     
     and visit http://localhost:3000 to visit your new forum.
