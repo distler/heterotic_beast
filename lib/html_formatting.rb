@@ -9,9 +9,9 @@ module HtmlFormatting
   
   def format_attributes
     self.class.formatted_attributes.each do |attr|
-      raw  = (read_attribute attr).purify
+      raw  = read_attribute attr
       if raw
-        html = Maruku.new("\n" + raw.delete("\r").to_utf8,
+        html = Maruku.new("\n" + raw.purify.delete("\r").to_utf8,
              {:math_enabled => true,
               :math_numbered => ['\\[','\\begin{equation}']}).to_html
         write_attribute "#{attr}_html", xhtml_sanitize(html.gsub(
