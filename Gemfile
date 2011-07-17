@@ -3,14 +3,15 @@ source "http://rubygems.org"
 gem 'rails', '3.0.7'
 gem 'ruby-openid', '>= 2.0.4', :require => "openid"
 gem 'rack-openid'
-gem 'will_paginate', :git => "http://github.com/mislav/will_paginate.git", :branch => "rails3"
+gem 'will_paginate', "~> 3.0.pre2"
 gem "itextomml", ">=1.4.6"
 gem "mongrel", ">=1.2.0.pre2"
 
 gem 'acts_as_list'
 gem 'acts_as_state_machine'
 gem 'permalink_fu'
-gem "nokogiri"
+gem 'nokogiri'
+gem 'rake'
 
 group :development, :test do
   gem 'rspec-rails'

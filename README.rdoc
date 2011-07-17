@@ -33,8 +33,8 @@ Check out the code via git:
 
     $ git clone http://golem.ph.utexas.edu/~distler/code/heterotic_beast.git
     $ cd heterotic_beast
-    $ bundle --deployment
-    $ bundle exec rake app:bootstrap
+    $ ruby bundle
+    $ ruby bundle exec rake app:bootstrap
 
     Follow the instructions to create your database and load users.
     Start the application with 
