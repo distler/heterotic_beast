@@ -9,11 +9,16 @@ class UsersController < ApplicationController
 
   def index
     users_scope = admin? ? :all_users : :users
+    set_content_type_header
     if params[:q]
       @users = current_site.send(users_scope).named_like(params[:q]).paginate(:page => current_page)
     else
       @users = current_site.send(users_scope).paginate(:page => current_page)
     end
+  end
+
+  def show
+    set_content_type_header
   end
 
   def new
@@ -39,10 +44,12 @@ class UsersController < ApplicationController
 
   def settings
     @user = current_user
+    set_content_type_header
     render :action => "edit"
   end
 
   def edit
+    set_content_type_header
   end
 
   def update

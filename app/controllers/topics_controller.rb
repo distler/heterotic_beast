@@ -18,7 +18,7 @@ class TopicsController < ApplicationController
   def show
     respond_to do |format|
       format.html do
-     set_content_type_header
+        set_content_type_header
         if logged_in?
           current_user.seen!
           (session[:topics] ||= {})[@topic.id] = Time.now.utc
@@ -35,7 +35,7 @@ class TopicsController < ApplicationController
     @topic = @forum.topics.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html { set_content_type_header } # new.html.erb
       format.xml  { render :xml  => @topic }
     end
   end

@@ -46,7 +46,10 @@ module ApplicationHelper
   end
 
   def avatar_for(user, size=32)
-    image_tag "http://www.gravatar.com/avatar.php?gravatar_id=#{Digest::MD5.hexdigest(user.email)}&rating=PG&size=#{size}", :size => "#{size}x#{size}", :class => 'photo'
+    t = "<object data='http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(user.email.downcase.strip)}?rating=PG&amp;size=#{size}&amp;d=404'>\n" +
+        " <svg class='photo' xmlns='http://www.w3.org/2000/svg' height='#{size-6}' width='#{size-6}'>\n" +
+        "  <use xlink:href='#svg_logo_svg' xmlns:xlink='http://www.w3.org/1999/xlink'/>\n </svg>\n</object>"
+    t.html_safe
   end
 
   def search_path(atom = false)

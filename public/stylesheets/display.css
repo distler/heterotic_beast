@@ -520,7 +520,8 @@ label
 
 .photo
 {
-	background:#aaa url(/images/clearbits/smile.gif) no-repeat 8px 8px;
+background: #888;
+border: 3px solid #888;
 }
 
 .smallutils

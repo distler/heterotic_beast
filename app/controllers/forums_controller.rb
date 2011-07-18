@@ -11,7 +11,7 @@ class ForumsController < ApplicationController
     @forums = current_site.ordered_forums
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { set_content_type_header } # index.html.erb
       format.xml  { render :xml => @forums }
     end
   end
@@ -24,6 +24,7 @@ class ForumsController < ApplicationController
 
     respond_to do |format|
       format.html do # show.html.erb
+        set_content_type_header
         @topics = @forum.topics.paginate :page => current_page
       end
       format.xml  { render :xml => @forum }
@@ -36,7 +37,7 @@ class ForumsController < ApplicationController
     @forum = current_site.forums.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html {set_content_type_header }# new.html.erb
       format.xml  { render :xml => @forum }
     end
   end
