@@ -251,4 +251,5 @@ function selectRange(elt, start, end) {
 window.onload = function (){
         fixRunIn();
         mactionWorkarounds();
+        if ( $('monitor_submit') ) $('monitor_submit').hide();
 };
