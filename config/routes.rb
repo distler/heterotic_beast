@@ -32,6 +32,8 @@ AlteredBeast::Application.routes.draw do
   match '/login' => 'sessions#new', :as => 'login'
   match '/logout' => 'sessions#destroy', :as => 'logout'
   match '/itex'  => 'itex#index'
+  delete '/monitorship/:forum_id/:topic_id' => 'monitorships#destroy', :as => 'monitorship' 
+  match '/monitorship/:forum_id/:topic_id' => 'monitorships#create', :as => 'monitorship' 
 
   resource  :session
 

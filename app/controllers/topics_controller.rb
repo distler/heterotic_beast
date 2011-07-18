@@ -13,6 +13,7 @@ class TopicsController < ApplicationController
   end
 
   def edit
+    set_content_type_header
   end
 
   def show
