@@ -44,10 +44,10 @@
 <tr>
   <th class="la" colspan="2"><%= I18n.t 'txt.topics', :default => 'Topics' %>
   <% if logged_in? %>
-  (<%=  (@monitored ? 
+  ( <%=  (@monitored ? 
     (link_to((I18n.t 'txt.all', :default => 'all'), forum_path(@forum), :class => "filter") + ' | ' + (I18n.t 'txt.monitored', :default => 'monitored')) :
    ((I18n.t 'txt.all', :default => 'all') +' | ' + link_to((I18n.t 'txt.monitored', :default => 'monitored'), forum_path(@forum)+"?monitored=true", :class => "filter"))
-   ).html_safe%>)   
+   ).html_safe%> )   
   <% end %>
   </th>
   <th width="1%"><%= I18n.t 'txt.posts', :default => 'Posts' %></th>
