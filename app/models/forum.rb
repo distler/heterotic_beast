@@ -32,6 +32,10 @@ class Forum < ActiveRecord::Base
     permalink
   end
 
+  def monitored_topics(user)
+    (self.topics.collect {|t| t if t.monitoring_users.include?(user)}).compact
+  end
+
   def to_s
     name
   end

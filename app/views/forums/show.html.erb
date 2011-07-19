@@ -1,3 +1,4 @@
+<% topics =  @monitored ? @monitored_topics : @topics %>
 <% content_for :right do %>
 
 <% unless @forum.description.blank? %>
@@ -32,22 +33,26 @@
   <%= I18n.t 'txt.count_posts', :count => @forum.posts.size, :num => number_with_delimiter(@forum.posts.size) %>
 </p>
 
-<% if @topics.total_entries %>
+<% if topics.total_entries %>
 <% if logged_in? %>
 <p style="float:right; margin-top:0;"><%= link_to I18n.t('txt.new_topic', :default => 'New topic'), new_forum_topic_path(@forum), :class => "utility" %></p>
 <% end %>
-<%= will_paginate @topics %>
+<%= will_paginate topics %>
 <% end %>
 
 <table border="0" cellspacing="0" cellpadding="0" class="wide topics">
 <tr>
-  <th class="la" colspan="2"><%= I18n.t 'txt.topic', :default => 'Topic' %></th>
+  <th class="la" colspan="2"><%= I18n.t 'txt.topics', :default => 'Topics' %>
+  <% if logged_in? %>
+  (<%=  @monitored ? (link_to (I18n.t 'txt.all', :default => 'all'), forum_path(@forum), :class => "filter") : (link_to (I18n.t 'txt.monitored', :default => 'monitored'), forum_path(@forum)+"?monitored=true", :class => "filter") %>)
+  <% end %>
+  </th>
   <th width="1%"><%= I18n.t 'txt.posts', :default => 'Posts' %></th>
   <th width="1%"><%= I18n.t 'txt.views', :default => 'Views' %></th>
   <th class="la"><%= I18n.t 'txt.latest_post', :default => 'Latest post' %></th>
 </tr>
-<% for topic in @topics %>
-<tr class="hentry">
+<% for topic in topics %>
+<tr class="entry">
   <td style="padding:5px; width:16px;" class="c1">
     <% 
     icon = "comment"
@@ -85,7 +90,7 @@
 <% end %>
 </table>
 
-<%= will_paginate @topics %>
+<%= will_paginate topics %>
 
 <% if logged_in? %>
   <p><%= link_to I18n.t('txt.new_topic', :default => 'New topic'), new_forum_topic_path(@forum), :class => "utility" %></p>

@@ -25,7 +25,11 @@ class ForumsController < ApplicationController
     respond_to do |format|
       format.html do # show.html.erb
         set_content_type_header
+        @monitored = logged_in? && params[:monitored]
         @topics = @forum.topics.paginate :page => current_page
+        @monitored_topics = logged_in? ? 
+            (@forum.monitored_topics(current_user).paginate :page => current_page) :
+            nil
       end
       format.xml  { render :xml => @forum }
     end
