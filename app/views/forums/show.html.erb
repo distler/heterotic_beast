@@ -1,4 +1,3 @@
-<% topics =  @monitored ? @monitored_topics : @topics %>
 <% content_for :right do %>
 
 <% unless @forum.description.blank? %>
@@ -33,67 +32,14 @@
   <%= I18n.t 'txt.count_posts', :count => @forum.posts.size, :num => number_with_delimiter(@forum.posts.size) %>
 </p>
 
-<% if topics.total_entries %>
-<% if logged_in? %>
-<p style="float:right; margin-top:0;"><%= link_to I18n.t('txt.new_topic', :default => 'New topic'), new_forum_topic_path(@forum), :class => "utility" %></p>
-<% end %>
-<%= will_paginate topics %>
-<% end %>
-
-<table border="0" cellspacing="0" cellpadding="0" class="wide topics">
-<tr>
-  <th class="la" colspan="2"><%= I18n.t 'txt.topics', :default => 'Topics' %>
-  <% if logged_in? %>
-  ( <%=  (@monitored ? 
-    (link_to((I18n.t 'txt.all', :default => 'all'), forum_path(@forum), :class => "filter") + ' | ' + (I18n.t 'txt.monitored', :default => 'monitored')) :
-   ((I18n.t 'txt.all', :default => 'all') +' | ' + link_to((I18n.t 'txt.monitored', :default => 'monitored'), forum_path(@forum)+"?monitored=true", :class => "filter"))
-   ).html_safe%> )   
-  <% end %>
-  </th>
-  <th width="1%"><%= I18n.t 'txt.posts', :default => 'Posts' %></th>
-  <th width="1%"><%= I18n.t 'txt.views', :default => 'Views' %></th>
-  <th class="la"><%= I18n.t 'txt.latest_post', :default => 'Latest post' %></th>
-</tr>
-<% for topic in topics %>
-<tr class="entry">
-  <td style="padding:5px; width:16px;" class="c1">
-    <% 
-    icon = "comment"
-    color = ""
-    if topic.locked?
-      icon = "lock"
-      post = I18n.t('txt.views_forums.comma_locked_topic', :default => ', this topic is locked.')
-      color = "darkgrey"
+<div id="topics_list">
+<%= if @monitored
+      render(:partial => 'topics_list', :object => @monitored_topics, :as => :topics)
+    else
+      render(:partial => 'topics_list', :object => @topics, :as => :topics)
     end
-    %>
-    <% if recent_topic_activity(topic) %>
-    <%= image_tag "clearbits/#{icon}.gif", :class => "icon green", :title => I18n.t('txt.views_forums.recent_activity', :default => "Recent activity") + "#{post}" %>
-    <% else %>
-      <%= image_tag "clearbits/#{icon}.gif", :class => "icon grey #{color}", :title => I18n.t('txt.views_forums.no_recent_activity', :default => "No recent activity") + "#{post}" %>
-    <% end %>
-  </td>
-  <td class="c2">
-    <%= I18n.t('txt.sticky', :default => ('[sticky]' + '<strong>')).html_safe if topic.sticky? %>
-    <%= topic_title_link (topic), :class => "entry-title", :rel => "bookmark" %>
-    <%= '</strong>'.html_safe if topic.sticky? %>
-    <% if topic.paged? %>
-      <small><%= link_to I18n.t('txt.goto_last_page', :default => 'last'), forum_topic_path(@forum, topic, :page => topic.last_page) %></small>
-    <% end %>
-  </td>
-  <td class="ca inv stat"><%= topic.posts.size %></td>
-  <td class="ca inv stat"><%= number_with_delimiter(topic.hits) %></td>
-  <td class="lp">
-    <abbr class="updated" title="<%= topic.last_updated_at.xmlschema %>"><%= I18n.t 'txt.post_age', :when => time_ago_in_words(topic.last_updated_at), :default => "posted %{when} ago" %></abbr>
-    <% if topic.last_user %>
-    <%= I18n.t 'txt.by_user_html', :default => 'by %{user}'.html_safe, :user => "<span class=\"author\"><strong class=\"fn\">#{h(topic.last_user.display_name)}</strong></span>" %>
-    <% end %>
-    <span><%= link_to I18n.t('txt.view', :default => 'view'), forum_topic_path(@forum, topic, :page => topic.last_page, :anchor => dom_id(topic.recent_post)) %></span>
-  </td>
-</tr>
-<% end %>
-</table>
-
-<%= will_paginate topics %>
+%>
+</div>
 
 <% if logged_in? %>
   <p><%= link_to I18n.t('txt.new_topic', :default => 'New topic'), new_forum_topic_path(@forum), :class => "utility" %></p>

@@ -1,0 +1,5 @@
+<% if @monitored %>
+  $('topics_list').update("<%= escape_javascript(render(:partial => 'topics_list', :object => @monitored_topics, :as => :topics))%>");
+<% else %>
+  $('topics_list').update("<%= escape_javascript(render(:partial => 'topics_list', :object => @topics, :as => :topics))%>");
+<% end %>

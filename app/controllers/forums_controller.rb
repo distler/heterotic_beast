@@ -21,20 +21,21 @@ class ForumsController < ApplicationController
   def show
     (session[:forums] ||= {})[@forum.id] = Time.now.utc
     (session[:forums_page] ||= Hash.new(1))[@forum.id] = current_page if current_page > 1
+    @monitored = logged_in? && params[:monitored]
+    @topics ||= @forum.topics.paginate :page => current_page
+    @monitored_topics ||= logged_in? ? 
+        (@forum.monitored_topics(current_user).paginate :page => current_page) :
+        nil
 
     respond_to do |format|
       format.html do # show.html.erb
         set_content_type_header
-        @monitored = logged_in? && params[:monitored]
-        @topics = @forum.topics.paginate :page => current_page
-        @monitored_topics = logged_in? ? 
-            (@forum.monitored_topics(current_user).paginate :page => current_page) :
-            nil
       end
       format.xml  { render :xml => @forum }
+      format.js
     end
   end
-
+  
   # GET /forums/new
   # GET /forums/new.xml
   def new

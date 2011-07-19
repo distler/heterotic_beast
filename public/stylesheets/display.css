@@ -589,7 +589,7 @@ table tr td
 
 table.forums,
 table.topics
- { font-size:0.8em; }
+ { font-size:0.8em; clear:right }
 table.forums tr th { font-size:0.8em; }
 table.forums tr td .title {
 	font-size:1.4em; 
