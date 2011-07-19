@@ -9,7 +9,11 @@ class PostsController < ApplicationController
   # /forums/1/posts
   # /forums/1/topics/1/posts
   def index
+    @monitored = logged_in? && params[:monitored]
     @posts = (@parent ? @parent.posts : current_site.posts).search(params[:q], :page => current_page)
+    i = 0
+    @monitored_posts = (@posts.dup.collect! {|p| (i+=1; p) if p.topic.monitoring_users.include?(current_user)}).compact
+    @monitored_posts.total_entries = i
     @users = @user ? {@user.id => @user} : User.index_from(@posts)
     respond_to do |format|
       format.html { set_content_type_header } # index.html.erb

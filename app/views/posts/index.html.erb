@@ -1,4 +1,5 @@
 <% @page_title = search_posts_title %>
+<% posts = @monitored ? @monitored_posts : @posts %>
 
 <h1>
 <% if params[:q].blank? %>
@@ -9,14 +10,14 @@
 </h1>
 <p class="subtitle">
   <%= feed_icon_tag @page_title, search_path(true) %>
-  <%= I18n.t 'txt.count_posts_found', :count => @posts.total_entries %>
+  <%= I18n.t 'txt.count_posts_found', :count => posts.total_entries %>
 </p>
 
-<%= will_paginate @posts %>
+<%= will_paginate posts %>
 
 <table border="0" cellspacing="0" cellpadding="0" class="posts wide">
-<% for post in @posts do %>
-<% unless post == @posts.first %>
+<% for post in posts do %>
+<% unless post == posts.first %>
 <tr class="spacer">
   <td colspan="2">&#xa0;</td>
 </tr>
@@ -46,4 +47,4 @@
 <% end %>
 </table>
 
-<%= will_paginate @posts %>
+<%= will_paginate posts %>

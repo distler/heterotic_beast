@@ -49,7 +49,9 @@
   <span>
     <%= I18n.t 'txt.count_topics', :count => @user.topics.size, :num => number_with_delimiter(@user.topics.size) %>,
     <%= I18n.t 'txt.count_posts', :count => @user.posts.size, :num => number_with_delimiter(@user.posts.size) %>
-    (<%= I18n.t 'txt.view', :default => 'view' %> <%= link_to I18n.t('txt.all', :default => 'all'), user_posts_path(@user) %> | <%= link_to I18n.t('txt.monitored', :default => 'monitored'), "#" %> <%= I18n.t 'txt.posts', :default => 'posts' %>)<br />
+    (<%= I18n.t 'txt.view', :default => 'view' %>
+     <%= link_to I18n.t('txt.all', :default => 'all'), user_posts_path(@user) %> <% if logged_in? %>|
+     <%= link_to I18n.t('txt.monitored', :default => 'monitored'), user_posts_path(@user, :monitored => true) %> <%= I18n.t 'txt.posts', :default => 'posts' %><% end %>)<br />
   </span>
 </p>
 
