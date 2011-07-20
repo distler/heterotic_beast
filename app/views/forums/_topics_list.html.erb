@@ -16,6 +16,7 @@
     <% end %>
   <% end %>
   </th>
+  <th class="ca"><%= I18n.t 'txt.started', :default => 'Started by' %></th>
   <th width="1%"><%= I18n.t 'txt.posts', :default => 'Posts' %></th>
   <th width="1%"><%= I18n.t 'txt.views', :default => 'Views' %></th>
   <th class="la"><%= I18n.t 'txt.latest_post', :default => 'Latest post' %></th>
@@ -46,6 +47,7 @@
       <small><%= link_to I18n.t('txt.goto_last_page', :default => 'last'), forum_topic_path(@forum, topic, :page => topic.last_page) %></small>
     <% end %>
   </td>
+  <td class="ca"><%= topic.user.display_name %></td>
   <td class="ca inv stat"><%= topic.posts.size %></td>
   <td class="ca inv stat"><%= number_with_delimiter(topic.hits) %></td>
   <td class="lp">

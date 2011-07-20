@@ -142,6 +142,7 @@
     search_results_for_searchterm: "Suchergebnis für &raquo;%{searchterm}&laquo;"
     goto_last_page: zur letzten Seite
 
+    started: Angelegt von
     new_topic: Neues Thema
     post_topic: Thema starten
     reply_to_topic: Neuen Beitrag zu diesem Thema schreiben
