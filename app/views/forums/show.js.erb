@@ -3,4 +3,4 @@
 <% else %>
   $('topics_list').update("<%= escape_javascript(render(:partial => 'topics_list', :object => @topics, :as => :topics))%>");
 <% end %>
-history.replaceState(null, '@forum.name', "<%= @forum.permalink %>.html");
+history.replaceState(null, '@forum.name', "<%= @forum.permalink %>.html<%= '?monitored=true' if @monitored %>");
