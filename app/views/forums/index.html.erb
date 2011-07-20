@@ -1,9 +1,9 @@
 <% content_for :right do %>
 
-<h5><%= I18n.t 'txt.sidebar.beast_title', :default => 'What is Beast?' %></h5>
+<h5><%= I18n.t 'txt.sidebar.beast_title', :default => 'What is Heterotic Beast?' %></h5>
 
 <p>
-  <%= I18n.t 'txt.sidebar.beast_desc', :default => "A small, light-weight forum in Rails with a scary name and a goal of around 500 lines of code when we're done." %>
+  <%= I18n.t('txt.sidebar.beast_desc', :default => "The premier math-enabled forum; small, lightweight and based on <b>Ruby on Rails</b>. Compose equations in <a href='http://golem.ph.utexas.edu/~distler/blog/itex2MMLcommands.html'>itex</a>, and see them rendered in MathML or via MathJax. Draw figures, using the embedded WYSIWYG SVG-editor. Go wild!").html_safe %>
 </p>
 
 <% if admin? %>

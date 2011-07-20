@@ -171,7 +171,7 @@
     footer_message: Two's company. Three's a forum. More's a Beast.
 
     sidebar:
-      beast_title: "Was ist Beast?"
+      beast_title: "Was ist Heterotic Beast?"
       beast_desc: "Ein kleines, schlankes Forum mit einem furchterregenden Namen, basierend auf Ruby on Rails und dem Ziel, aus etwa 500 Zeilen Quelltext zu bestehen – wenn es mal fertig sein sollte. ;-)"
 
     admin:
