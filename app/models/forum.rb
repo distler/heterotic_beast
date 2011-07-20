@@ -33,7 +33,7 @@ class Forum < ActiveRecord::Base
   end
 
   def monitored_topics(user)
-    (self.topics.collect {|t| t if t.monitoring_users.include?(user)}).compact
+    self.topics.joins(:monitorships).where(:monitorships => {:user_id => user, :active => true})
   end
 
   def to_s

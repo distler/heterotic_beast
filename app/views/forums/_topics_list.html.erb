@@ -10,9 +10,9 @@
   <th class="la" colspan="2"><%= I18n.t 'txt.topics', :default => 'Topics' %>
   <% if logged_in? %>
     <% if @monitored %>
-  ( <%= (link_to((I18n.t 'txt.a', :default => 'all'), forum_path(@forum), :class => "filter", :remote=>true) + ' | ' + (I18n.t 'txt.monitored', :default => 'monitored')).html_safe%> )   
+  ( <%= (link_to((I18n.t 'txt.a', :default => 'all'), forum_path(@forum), :class => "filter", :id => 'filter_link', :remote=>true) + ' | ' + (I18n.t 'txt.monitored', :default => 'monitored')).html_safe%> )   
     <% else %>
-  ( <%= ((I18n.t 'txt.all', :default => 'all') +' | ' + link_to((I18n.t 'txt.monitored', :default => 'monitored'), forum_path(@forum)+"?monitored=true", :class => "filter", :remote=>true)).html_safe%> ) 
+  ( <%= ((I18n.t 'txt.all', :default => 'all') +' | ' + link_to((I18n.t 'txt.monitored', :default => 'monitored'), forum_path(@forum)+"?monitored=true", :class => "filter", :id => 'filter_link', :remote=>true)).html_safe%> ) 
     <% end %>
   <% end %>
   </th>
@@ -59,4 +59,5 @@
 <% end %>
 </table>
 
+<script type='text/javascript'>if (!history || !history.replaceState) $('filter_link').removeAttribute('data-remote');</script>
 <%= will_paginate topics %>

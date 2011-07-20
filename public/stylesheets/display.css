@@ -494,7 +494,7 @@ p
 
 a.filter
 {
-    color:#9c6;
+    color:#ae8;
     font-weight:normal;
 }
 
@@ -946,6 +946,36 @@ div.editbox ul.help {
 {
   color: #666;
 }
+
+.pagination {
+  font-size: 0.7em;
+  text-align: center;
+  padding: .3em;
+  clear:both; }
+.pagination a, .pagination span, .digg_pagination em {
+    padding: .2em .5em; }
+.pagination span.disabled {
+    color: #AAA; }
+.pagination em {
+    font-weight: bold;
+    color: #FF0084; }
+.pagination a {
+    border: 1px solid #DDDDDD;
+    color: #0063DC;
+    text-decoration: none; }
+.pagination a:hover, .pagination a:focus {
+      border-color: #360;
+      background: #9c6;
+      color: white; }
+.pagination .page_info {
+    color: #aaa;
+    padding-top: .8em; }
+.pagination .prev_page, .pagination .next_page {
+    border-width: 2px; }
+.pagination .prev_page {
+    margin-right: .25em; }
+.pagination .next_page {
+    margin-left: .25em; }
 
 merror {display:inline;font-size:1em;}
 math[display=block] {overflow:auto;}
