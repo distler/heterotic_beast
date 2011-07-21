@@ -72,7 +72,7 @@ class User < ActiveRecord::Base
   end
 
   def openid_url=(value)
-    write_attribute :openid_url, value.blank? ? nil : OpenIdAuthentication.normalize_identifier(value)
+    write_attribute :openid_url, value.blank? ? nil : OpenID.normalize_url(value)
   end
 
   def using_openid
