@@ -58,7 +58,7 @@
 <%= @user.bio_html.html_safe if @user.bio_html  %>
 
 <% unless @user.website.blank? %>
-<p><strong><%= I18n.t 'txt.website', :default => 'Website' %></strong> <%= sanitize link_to(@user.website.gsub("http://",""), "http://" + @user.website.gsub("http://","")) %>
+<p><strong><%= I18n.t 'txt.website', :default => 'Website' %></strong> <%= sanitize link_to(@user.website.gsub("http://",""), "http://" + @user.website.gsub("http://","")) %></p>
 <% end %>
 <p><%= I18n.t 'txt.user_since', :default => 'User since %{date}', :date => @user.created_at.to_date.to_s(:long) %></p>
 
