@@ -26,7 +26,7 @@ module ApplicationHelper
   end
 
   def search_posts_title
-    (params[:q].blank? ? I18n.t('txt.recent_posts', :default => 'Recent Posts') : I18n.t('txt.searching_for', :default => 'Searching for') + " '#{params[:q]}'").tap do |title|
+    (@q.blank? ? I18n.t('txt.recent_posts', :default => 'Recent Posts') : I18n.t('txt.searching_for', :default => 'Searching for') + " '#{@q}'").tap do |title|
       title << " " + I18n.t('txt.by_user', :default => 'by %{user}', :user => @user.display_name) if @user
       title << " " + I18n.t('txt.in_forum', :default => 'in %{forum}', :forum => @forum.name) if @forum
     end
@@ -53,7 +53,7 @@ module ApplicationHelper
   end
 
   def search_path(atom = false)
-    options = params[:q].blank? ? {} : {:q => params[:q]}
+    options = @q.blank? ? {} : {:q => @q}
     prefix = 
       if @topic
         options.update :topic_id => @topic, :forum_id => @forum

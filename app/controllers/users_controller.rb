@@ -1,3 +1,5 @@
+require 'instiki_stringsupport'
+
 class UsersController < ApplicationController
   before_filter :admin_required, :only => [:suspend, :unsuspend, :destroy, :purge, :edit]
   before_filter :find_user, :only => [:update, :show, :edit, :suspend, :unsuspend, :destroy, :purge]
@@ -11,7 +13,8 @@ class UsersController < ApplicationController
     users_scope = admin? ? :all_users : :users
     set_content_type_header
     if params[:q]
-      @users = current_site.send(users_scope).named_like(params[:q]).paginate(:page => current_page)
+      @q = params[:q].purify
+      @users = current_site.send(users_scope).named_like(@q).paginate(:page => current_page)
     else
       @users = current_site.send(users_scope).paginate(:page => current_page)
     end
@@ -30,7 +33,7 @@ class UsersController < ApplicationController
     @user = params[:user] ?
              current_site.users.build(params[:user]) :
              # current_site.users.build(User.where(:email => params[:email]).first.login)    
-             User.where(:email => params[:email]).first
+             User.where(:email => params[:email].purify).first
     @user.save if @user.valid?
     @user.register! if @user.valid?
     unless @user.new_record?

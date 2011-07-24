@@ -2,10 +2,10 @@
 <% posts = @monitored ? @monitored_posts : @posts %>
 
 <h1>
-<% if params[:q].blank? %>
+<% if @q.blank? %>
   <%= @page_title %>
 <% else %>
-  <%= t 'txt.search_results_for_searchterm', :default => "Search results for '%{searchterm}'", :searchterm => params[:q] %>
+  <%= t 'txt.search_results_for_searchterm', :default => "Search results for '%{searchterm}'", :searchterm => @q %>
 <% end %>
 </h1>
 <p class="subtitle">

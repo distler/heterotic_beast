@@ -43,8 +43,8 @@ class SessionsController < ApplicationController
             if @user.new_record?
               @user.login = openid_url
               @user.email = registration['email']
-              @user.password = 123456
-              @user.site = Site.first
+              @user.password = registration['password'] || '123456'
+              @user.site = current_site
               @user.display_name = registration['nickname']
               @user.save(false)
             end

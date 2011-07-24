@@ -3,7 +3,7 @@
   <li><%= link_to I18n.t('txt.users', :default => 'Users'), users_path %></li>
   <li id="search">
     <%= form_tag posts_path, :method => 'get' do %>
-      <%= text_field_tag :q, params[:q], :size => 15, :id => :search_box %>
+      <%= text_field_tag :q, @q, :size => 15, :id => :search_box %>
     <% end %>
   </li>
   <li><%= link_to_function I18n.t('txt.search', :default => 'Search'), "#", :href => root_path, :id => 'search-link' %></li>

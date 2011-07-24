@@ -1,3 +1,5 @@
+require 'instiki_stringsupport'
+
 class PostsController < ApplicationController
   before_filter :find_parents
   before_filter :find_post, :only => [:edit, :update, :destroy]
@@ -10,7 +12,8 @@ class PostsController < ApplicationController
   # /forums/1/topics/1/posts
   def index
     @monitored = logged_in? && params[:monitored]
-    @posts = (@parent ? @parent.posts : current_site.posts).search(params[:q], :page => current_page)
+    @q = params[:q] ? params[:q].purify : nil
+    @posts = (@parent ? @parent.posts : current_site.posts).search(@q, :page => current_page)
     i = 0
     @monitored_posts = (@posts.dup.collect! {|p| (i+=1; p) if p.topic.monitoring_users.include?(current_user)}).compact
     @monitored_posts.total_entries = i
