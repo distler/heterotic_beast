@@ -61,7 +61,13 @@
 <% end %>
 </table>
 
-<script type='text/javascript'><!--//--><![CDATA[//><!--
-if (history  && history.replaceState) $('filter_link').writeAttribute('data-remote');
-//--><!]]></script>
 <%= will_paginate topics %>
+
+<script type='text/javascript'><!--//--><![CDATA[//><!--
+if (history  && history.replaceState) {
+  $('filter_link').writeAttribute('data-remote');
+  if ($$('.pagination')) {
+    $$('.pagination a').invoke('writeAttribute','data-remote')
+  }
+};
+//--><!]]></script>
