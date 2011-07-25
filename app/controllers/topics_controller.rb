@@ -18,16 +18,15 @@ class TopicsController < ApplicationController
 
   def show
     respond_to do |format|
-      format.html do
-        set_content_type_header
-        if logged_in?
-          current_user.seen!
-          (session[:topics] ||= {})[@topic.id] = Time.now.utc
-        end
-        @topic.hit! unless logged_in? && @topic.user_id == current_user.id
-        @posts = @topic.posts.paginate :page => current_page
-        @post  = Post.new
+      if logged_in?
+        current_user.seen!
+        (session[:topics] ||= {})[@topic.id] = Time.now.utc
       end
+      @topic.hit! unless logged_in? && @topic.user_id == current_user.id
+      @posts = @topic.posts.paginate :page => current_page
+      @post  = Post.new
+      format.html { set_content_type_header }
+      format.js
       format.xml  { render :xml  => @topic }
     end
   end

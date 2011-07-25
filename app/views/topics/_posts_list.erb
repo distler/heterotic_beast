@@ -1,0 +1,70 @@
+<a name="<%= dom_id @posts.first %>" id="<%= dom_id @posts.first %>">&#xA0;</a>
+
+<%= will_paginate @posts %>
+<table border="0" cellspacing="0" cellpadding="0" class="posts wide">
+<% for post in @posts do %>
+<% unless post == @posts.first %>
+<tr class="spacer">
+  <td colspan="2">
+    <a name="<%= dom_id post %>" id="<%= dom_id post %>">&#xA0;</a>
+  </td>
+</tr>
+<% end %>
+<tr class="post hentry" id="<%= dom_id post %>-row">
+  <td class="author vcard">
+    <div class="date">
+      <a href="#<%= dom_id post %>" rel="bookmark">
+      <abbr class="updated" title="<%= post.created_at.xmlschema %>">
+      <%= I18n.t 'txt.post_age', :when => time_ago_in_words(post.created_at), :default => "posted %{when} ago" %>
+      </abbr>
+      </a>
+    </div>
+
+    <%= avatar_for post.user %>
+    <span class="fn"><%= link_to truncate(post.user.display_name, :length => 15), user_path(post.user), :class => (post.user == @posts.first.user ? "threadauthor" : nil) %></span>
+    <% if post.user.admin? || post.forum.moderators.include?(post.user) || !post.user.active? %>
+    <span class="admin">
+      <% if post.user.admin? %>
+        <%= I18n.t 'txt.user_is_administrator', :default => 'Administator' %>
+      <% elsif post.forum.moderators.include?(post.user) %>
+        <%= I18n.t 'txt.user_is_moderator', :default => 'Moderator' %>
+      <% elsif post.user.suspended? %>
+        <%= post.user.state  %>
+      <% end %>
+    </span>
+    <% end %>
+    <span class="posts"><%= I18n.t 'txt.count_posts', :count => post.user.posts.size, :num => number_with_delimiter(post.user.posts.size) %></span>
+
+
+    <% if logged_in? && post.editable_by?(current_user) %>
+    <p>
+      <span class="edit">
+        <%= ajax_spinner_for "edit-post-#{post.id}", "spinner_bounce.gif" %>
+				<%= link_to I18n.t('txt.admin.edit_post', :default => 'Edit post'), edit_forum_topic_post_path(@forum, @topic, post), :class => 'utility' %>
+      </span>
+    </p>
+    <% end %>
+
+
+  </td>
+  <td class="body entry-content" id="post-body-<%= post.id %>">
+
+    <%= link_to_function image_tag('clearbits/comment.gif', :class => 'icon reply'), "$('reply').toggle()" if logged_in? && @posts.first == post %>
+
+      <% if post.user.active? %>
+        <%= post.body_html.html_safe %>
+      <% else %>
+        <p>(<% I18n.t 'txt.suspended_user_post', :default => 'This post has been removed' %>)</p>
+      <% end %>
+  </td>
+</tr>
+
+<% end %>
+</table>
+       
+<%= will_paginate @posts %>
+<script type='text/javascript'><!--//--><![CDATA[//><!--
+if (history  && history.replaceState && $$('.pagination')) {
+    $$('.pagination a').invoke('writeAttribute','data-remote')
+};
+//--><!]]></script>
