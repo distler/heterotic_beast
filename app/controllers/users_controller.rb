@@ -11,12 +11,15 @@ class UsersController < ApplicationController
 
   def index
     users_scope = admin? ? :all_users : :users
-    set_content_type_header
     if params[:q]
       @q = params[:q].purify
       @users = current_site.send(users_scope).named_like(@q).paginate(:page => current_page)
     else
       @users = current_site.send(users_scope).paginate(:page => current_page)
+    end
+    respond_to do |format|
+      format.html { set_content_type_header }
+      format.js
     end
   end
 

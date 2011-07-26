@@ -38,7 +38,7 @@ class User
     self.deleted_at = nil
     self.activation_code = Digest::SHA1.hexdigest( Time.now.to_s.split(//).sort_by {rand}.join )
 
-    UserMailer.signup_notification(self).deliver unless using_openid
+    UserMailer.signup_notification(self).deliver # unless using_openid
   end
 
   protected

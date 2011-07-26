@@ -1,0 +1,2 @@
+$('users_list').update("<%= escape_javascript(render(:partial => 'users_list'))%>");
+history.replaceState(null, 'Users', "<%= users_path %>.html<% if params[:page] %>?page=<%= params[:page] %><% end %>");

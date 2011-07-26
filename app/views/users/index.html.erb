@@ -12,35 +12,6 @@
   <%= user_count %>: <%= active_user_count %>, <%= lurking_user_count %>
 </p>
 
-<%= will_paginate @users %>
-
-<table border="0" cellspacing="0" cellpadding="0" class="wide forums">
-  <tr>
-    <th class="la" width="88%"><%= I18n.t 'txt.views_users.name_or_login', :default => 'Name / Login' %></th>
-	<% if logged_in? && current_user.admin? %>
-	<th><%= I18n.t 'txt.views_users.current_status_title', :default => "Current Status" %></th>
-	<% end %>
-    <th><%= I18n.t 'txt.views_users.website_title', :default => 'Website' %></th>
-    <th width="1%"><%= I18n.t 'txt.views_users.posts_title', :default => 'Posts' %></th>
-  </tr>
-<% @users.each do |user|%>  
-  <tr>
-    <td><%= link_to user.display_name || user.login, user, :class => (user.admin? ? "admin" : nil) %>
-      <span style="color:#666">
-      <%= I18n.t('txt.views_users.admin_in_parens', :default => "(admin)") if user.admin? %>
-      </span>
-	  </td>
-	<% if logged_in? && current_user.admin? %>
-		<td><%= user.state %></td>
-	<% end %>
-    <td class="la">
-      <% unless user.website.blank? %>
-      <%= sanitize link_to(user.website.gsub("http://",""), "http://" + user.website.gsub("http://","")) %>
-      <% end %>
-    </td>
-    <td class="ca inv"><%= user.posts.size %></td>
-  </tr>
-<% end %>
-</table>
-
-<%= will_paginate @users %>
+<div id='users_list'>
+  <%= render(:partial => 'users_list') %>
+</div>
