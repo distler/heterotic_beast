@@ -33,6 +33,19 @@ class Post < ActiveRecord::Base
     paginate options
   end
 
+  def self.search_monitored(user_id, query, options = {})
+    # Same as above, but select only posts in topics monitored by the given user
+    options[:conditions] ||= ["LOWER(#{Post.table_name}.body) LIKE ?", "%#{query}%"] unless query.blank?
+    options[:select]     ||= "#{Post.table_name}.*, #{Topic.table_name}.title as topic_title, f.name as forum_name"
+    options[:joins]      ||= "inner join #{Topic.table_name} on #{Post.table_name}.topic_id = #{Topic.table_name}.id " + 
+                             "inner join #{Forum.table_name} as f on #{Topic.table_name}.forum_id = f.id " +
+                             "inner join #{Monitorship.table_name} as m on #{Post.table_name}.topic_id = m.topic_id AND " +
+                             "m.user_id = #{user_id} AND m.active = 't'"
+    options[:order]      ||= "#{Post.table_name}.created_at DESC"
+    options[:count]      ||= {:select => "#{Post.table_name}.id"}
+    paginate options
+  end
+
   def forum_name
     forum.name
   end

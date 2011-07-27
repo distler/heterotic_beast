@@ -14,9 +14,7 @@ class PostsController < ApplicationController
     @monitored = logged_in? && params[:monitored]
     @q = params[:q] ? params[:q].purify : nil
     @posts = (@parent ? @parent.posts : current_site.posts).search(@q, :page => current_page)
-    i = 0
-    @monitored_posts = (@posts.dup.collect! {|p| (i+=1; p) if p.topic.monitoring_users.include?(current_user)}).compact
-    @monitored_posts.total_entries = i
+    @monitored_posts = (@parent ? @parent.posts : current_site.posts).search_monitored(current_user.id, @q, :page => current_page)
     @users = @user ? {@user.id => @user} : User.index_from(@posts)
     respond_to do |format|
       format.html { set_content_type_header } # index.html.erb
