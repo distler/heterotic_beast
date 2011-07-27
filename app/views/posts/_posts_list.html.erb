@@ -1,9 +1,9 @@
-<%= will_paginate posts %>
 <p class="subtitle">
   <%= feed_icon_tag @page_title, search_path(true) %>
   <%= I18n.t 'txt.count_posts_found', :count => posts.total_entries %>
 </p>
 
+<%= will_paginate posts %>
 <table border="0" cellspacing="0" cellpadding="0" class="posts wide">
 <% for post in posts do %>
 <% unless post == posts.first %>
