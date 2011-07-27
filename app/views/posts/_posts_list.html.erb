@@ -1,0 +1,45 @@
+<%= will_paginate posts %>
+<p class="subtitle">
+  <%= feed_icon_tag @page_title, search_path(true) %>
+  <%= I18n.t 'txt.count_posts_found', :count => posts.total_entries %>
+</p>
+
+<table border="0" cellspacing="0" cellpadding="0" class="posts wide">
+<% for post in posts do %>
+<% unless post == posts.first %>
+<tr class="spacer">
+  <td colspan="2">&#xa0;</td>
+</tr>
+<% end %>
+<tr class="post entry" id="<%= dom_id post %>">
+  <td class="author vcard">
+    <div class="date">
+      <abbr class="updated" title="<%= post.created_at.xmlschema %>">
+      <%= I18n.t 'txt.post_age', :when => time_ago_in_words(post.created_at), :default => 'posted %{when} ago' %>
+      </abbr>
+    </div>
+
+    <%= avatar_for @users[post.user_id] %>
+    <span class="fn"><%= link_to truncate(@users[post.user_id].display_name, :length => 15), user_path(post.user) %></span>
+    <span class="posts"><%= t 'txt.count_posts', :count => @users[post.user_id].posts.size, :num => number_with_delimiter(@users[post.user_id].posts.size) %></span>
+  </td>
+  <td class="body entry-content">
+    <p class="topic">
+      <%= t 'txt.forum', :default => 'Forum' %>: <%= link_to post.forum.name, forum_path(post.forum) %> &#x2013;
+      <%= t 'txt.topic', :default => 'Topic' %>: <%= link_to post.topic.title, forum_topic_path(post.forum, post.topic) %>
+    </p>
+    
+    <%= post.body_html.html_safe %>
+  </td>
+</tr>
+
+<% end %>
+</table>
+
+<%= will_paginate posts %>
+
+<script type='text/javascript'><!--//--><![CDATA[//><!--
+if (history  && history.replaceState && $$('.pagination')) {
+    $$('.pagination a').invoke('writeAttribute','data-remote')
+};
+//--><!]]></script>

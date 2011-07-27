@@ -20,6 +20,7 @@ class PostsController < ApplicationController
       format.html { set_content_type_header } # index.html.erb
       format.atom # index.atom.builder
       format.xml  { render :xml  => @posts }
+      format.js
     end
   end
 

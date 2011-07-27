@@ -1,2 +1,2 @@
 $('posts_list').update("<%= escape_javascript(render(:partial => 'posts_list'))%>");
-history.replaceState(null, '@topic.name', "<%= @topic.permalink %>.html<% if params[:page] %>?page=<%= params[:page] %><% end %>");
+history.replaceState(null, '@topic.name', "<%= @topic.permalink %>.html<%=  %{?page=} + params[:page] if params[:page] %>");
