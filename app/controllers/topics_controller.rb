@@ -60,7 +60,7 @@ class TopicsController < ApplicationController
     respond_to do |format|
       if @topic.errors.empty?
         flash[:notice] = 'Topic was successfully updated.'
-        format.html { redirect_to(forum_topic_path(@forum, @topic)) }
+        format.html { redirect_to(forum_topic_path(Forum.find(@topic.forum_id), @topic)) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

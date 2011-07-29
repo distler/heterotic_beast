@@ -23,6 +23,6 @@
 <% elsif admin? && (forums = current_site.ordered_forums).length > 1 %>
 <p id="topic_forum_id">
   <label for="topic_forum_id"><%= I18n.t('txt.forum', :default => 'Forum') %></label><br />
-  <%= form.collection_select :forum_id, forums, :id, :name %></p>
+  <%= form.collection_select :forum_id, forums, :id, :name %>
 </p>
 <% end %>
