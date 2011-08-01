@@ -231,6 +231,7 @@
       other: "%{count} Beiträge gefunden"
 
     post_age: "vor %{when}"
+    post_edited: "editiert %{when}"
 
     views_sites:
       title: Seiten

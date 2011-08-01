@@ -78,4 +78,11 @@ module ApplicationHelper
     "<img src='/images/#{spinner}' style='display:none; vertical-align:middle;' id='#{id.to_s}_spinner'/> ".html_safe
   end
 
+  def edited_on_tag(post)
+    if (post.updated_at - post.created_at > 5.minutes)
+      %{<p class='date'><abbr class='edited'  title="#{post.created_at.xmlschema}">#{I18n.t 'txt.post_edited',
+          :when => time_ago_in_words(post.updated_at), :default => 'edited %{when} ago'}</abbr></p>}.html_safe
+    end
+  end
+
 end

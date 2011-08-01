@@ -22,6 +22,7 @@
     <%= avatar_for @users[post.user_id] %>
     <span class="fn"><%= link_to truncate(@users[post.user_id].display_name, :length => 15), user_path(post.user) %></span>
     <span class="posts"><%= t 'txt.count_posts', :count => @users[post.user_id].posts.size, :num => number_with_delimiter(@users[post.user_id].posts.size) %></span>
+    <%= edited_on_tag(post) %>
   </td>
   <td class="body entry-content">
     <p class="topic">

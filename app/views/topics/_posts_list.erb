@@ -35,7 +35,7 @@
     <% end %>
     <span class="posts"><%= I18n.t 'txt.count_posts', :count => post.user.posts.size, :num => number_with_delimiter(post.user.posts.size) %></span>
 
-
+    <%= edited_on_tag(post) %>
     <% if logged_in? && post.editable_by?(current_user) %>
     <p>
       <span class="edit">
