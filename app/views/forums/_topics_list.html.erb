@@ -65,9 +65,7 @@
 
 <script type='text/javascript'><!--//--><![CDATA[//><!--
 if (history  && history.replaceState) {
-  $('filter_link').writeAttribute('data-remote');
-  if ($$('.pagination')) {
-    $$('.pagination a').invoke('writeAttribute','data-remote')
-  }
+  if ($('filter_link')) $('filter_link').writeAttribute('data-remote');
+  if ($$('.pagination')) $$('.pagination a').invoke('writeAttribute','data-remote'); 
 };
 //--><!]]></script>
