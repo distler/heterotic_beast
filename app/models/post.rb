@@ -40,7 +40,7 @@ class Post < ActiveRecord::Base
     options[:joins]      ||= "inner join #{Topic.table_name} on #{Post.table_name}.topic_id = #{Topic.table_name}.id " + 
                              "inner join #{Forum.table_name} as f on #{Topic.table_name}.forum_id = f.id " +
                              "inner join #{Monitorship.table_name} as m on #{Post.table_name}.topic_id = m.topic_id AND " +
-                             "m.user_id = #{user_id} AND m.active = 't'"
+                             "m.user_id = #{user_id} AND m.active != 0"
     options[:order]      ||= "#{Post.table_name}.created_at DESC"
     options[:count]      ||= {:select => "#{Post.table_name}.id"}
     paginate options
