@@ -20,7 +20,7 @@ class Post < ActiveRecord::Base
   after_create  :update_cached_fields
   after_destroy :update_cached_fields
 
-  attr_accessible :body
+  attr_accessible :body, :topic_id
 
   def self.search(query, options = {})
     # had to change the other join string since it conflicts when we bring parents in

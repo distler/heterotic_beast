@@ -9,7 +9,12 @@
         <td valign="top">
           <%= link_to(I18n.t('txt.views_posts.delete', :default => 'delete post'), forum_topic_post_path(@post.forum, @post.topic, @post, :page => current_page), 
                 :class => "utility", :method => :delete, :confirm => I18n.t('txt.views_posts.delete_sure', :default => 'Delete this post forever?')) %>  
-
+          <% if admin? && (topics = @post.forum.topics).length > 1 %>
+            <span id="post_topic_id" class="utility">
+              <label for="post_topic_id"><%= I18n.t('txt.topic', :default => 'Topic') %>:</label>
+              <%= f.collection_select :topic_id, topics, :id, :title %>
+            </span>
+          <% end %>
           <%= render :partial => "formatting" %>
         </td>
       </tr>
