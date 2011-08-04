@@ -1,6 +1,7 @@
 class TopicsController < ApplicationController
   before_filter :find_forum
   before_filter :find_topic, :only => [:show, :edit, :update, :destroy]
+  before_filter :admin_required, :only => [:edit, :update, :destroy]
 
   def index
     respond_to do |format|
