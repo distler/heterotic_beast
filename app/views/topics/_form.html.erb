@@ -5,6 +5,7 @@
   <%= form.text_field :title, :onchange => "/*TopicForm.editNewTitle(this);*/", :class => "primary", :tabindex => 10 %>
 
   <%= for_moderators_of @forum do %>
+    <input name="topic[forum_id]" type="hidden" value="<%= @forum.permalink %>" />
     <label style="margin-left:1em;">
     <%= form.check_box :sticky %> <%= I18n.t('txt.sticky', :default => 'sticky') %>
     </label>

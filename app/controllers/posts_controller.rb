@@ -76,7 +76,13 @@ class PostsController < ApplicationController
     @post.destroy
 
     respond_to do |format|
-      format.html { redirect_to(forum_topic_path(@forum, @topic)) }
+      format.html do
+          if @forum.topics.exists?(@topic)
+            redirect_to(forum_topic_path(@forum, @topic))
+          else
+            redirect_to(@forum)
+          end
+        end
       format.xml  { head :ok }
     end
   end
