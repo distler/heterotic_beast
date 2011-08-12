@@ -18,6 +18,7 @@ class Post < ActiveRecord::Base
   validate :topic_is_not_locked
 
   after_create  :update_cached_fields
+  after_update  :update_cached_fields
   after_destroy :update_cached_fields
 
   attr_accessible :body, :topic_id

@@ -95,6 +95,8 @@ class Topic < ActiveRecord::Base
       posts.update_all(:forum_id => forum_id)
       Forum.where(:id => @old_forum_id).update_all("posts_count = posts_count - #{posts_count}")
       Forum.where(:id => forum_id).update_all("posts_count = posts_count + #{posts_count}")
+      Forum.where(:id => @old_forum_id).update_all("topics_count = topics_count - 1")
+      Forum.where(:id => forum_id).update_all("topics_count = topics_count + 1")
     end
 
     def count_user_posts_for_counter_cache
