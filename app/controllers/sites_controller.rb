@@ -37,7 +37,13 @@ class SitesController < ApplicationController
     respond_to do |format|
       if @site.save
         flash[:notice] = 'Site was successfully created.'
-        flash[:notice] += ' Please create your account.' unless logged_in?
+        if logged_in?
+          new_user = current_user.clone
+          new_user.site_id = @site.id
+          new_user.save
+        else
+          flash[:notice] += ' Please create your account.'
+        end
         format.html do
           redirect_to logged_in? ? @site : signup_path
         end
