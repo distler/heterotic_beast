@@ -100,7 +100,7 @@ class PostsController < ApplicationController
 
     def find_post
       post = @topic.posts.find(params[:id])
-      if post.user == current_user || current_user.admin?
+      if post.user == current_user || current_user.admin? || @forum.moderators.include?(current_user)
         @post = post
       else
         raise ActiveRecord::RecordNotFound
