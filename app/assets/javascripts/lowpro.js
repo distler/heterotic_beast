@@ -1,6 +1,6 @@
 LowPro = {};
-LowPro.Version = '0.5';
-LowPro.CompatibleWithPrototype = '1.6';
+LowPro.Version = '0.6';
+LowPro.CompatibleWithPrototype = '1.7';
 
 if (Prototype.Version.indexOf(LowPro.CompatibleWithPrototype) != 0 && window.console && window.console.warn)
   console.warn("This version of Low Pro is tested with Prototype " + LowPro.CompatibleWithPrototype + 
@@ -111,10 +111,12 @@ Event.addBehavior = function(rules) {
 
 Event.delegate = function(rules) {
   return function(e) {
-      var element = $(e.element());
-      for (var selector in rules)
-        if (element.match(selector)) return rules[selector].apply(this, $A(arguments));
-    }
+		for ( var selector in rules ){
+			if ( e.findElement(selector) ) {
+				return rules[selector].apply(this, $A(arguments));
+			}
+		}        
+	}
 }
 
 Object.extend(Event.addBehavior, {
@@ -130,16 +132,15 @@ Object.extend(Event.addBehavior, {
         var parts = sel.split(/:(?=[a-z]+$)/), css = parts[0], event = parts[1];
         $$(css).each(function(element) {
           if (event) {
-            var wrappedObserver = Event.addBehavior._wrapObserver(observer);
-            $(element).observe(event, wrappedObserver);
-            Event.addBehavior.cache.push([element, event, wrappedObserver]);
+            var eventHandler = element.on(event, Event.addBehavior._wrapObserver(observer));
+            Event.addBehavior.cache.push(eventHandler);
           } else {
-            if (!element.$$assigned || !element.$$assigned.include(observer)) {
+            var assignedObservers = element.retrieve('_lowpro_assigned_observers_') || [];
+            if (!assignedObservers.include(observer)) {
               if (observer.attach) observer.attach(element);
-              
-              else observer.call($(element));
-              element.$$assigned = element.$$assigned || [];
-              element.$$assigned.push(observer);
+              else observer.call(element);
+              assignedObservers.push(observer);
+              element.store('_lowpro_assigned_observers_', assignedObservers);
             }
           }
         });
@@ -149,7 +150,7 @@ Object.extend(Event.addBehavior, {
   
   unload : function() {
     this.cache.each(function(c) {
-      Event.stopObserving.apply(Event, c);
+      c.stop();
     });
     this.cache = [];
   },
@@ -209,10 +210,12 @@ var Behavior = {
         if (!this.initialize) {
           var args = $A(arguments);
 
-          return function() {
+          var returning = function() {
             var initArgs = [this].concat(args);
-            behavior.attach.apply(behavior, initArgs);
+            return behavior.attach.apply(behavior, initArgs);
           };
+          returning.prototype = behavior.prototype;
+          return returning;
         } else {
           var args = (arguments.length == 2 && arguments[1] instanceof Array) ? 
                       arguments[1] : Array.prototype.slice.call(arguments, 1);
@@ -255,11 +258,44 @@ var Behavior = {
       for (var member in bound) {
         var matches = member.match(/^on(.+)/);
         if (matches && typeof bound[member] == 'function')
-          bound.element.observe(matches[1], Event.addBehavior._wrapObserver(bound[member].bindAsEventListener(bound)));
+          bound.element.on(matches[1], Event.addBehavior._wrapObserver(bound[member].bindAsEventListener(bound)));
       }
     }
   }
 };
+
+Event.delegateBehaviors = Behavior.create({
+  initialize: function(rules) {
+    var events = new Hash;
+    for (var selector in rules) {
+      var behavior = rules[selector];
+      for (var member in behavior.prototype) {
+        var matches = member.match(/^on(.+)/);
+        if (matches && typeof behavior.prototype[member] == 'function') {
+          if (!events.get(matches[1])) events.set(matches[1], {});
+          events.get(matches[1])[selector] = behavior;
+        }
+      }
+    }
+    events.each(function(pair) {
+      this.element.on(pair.key, Event.addBehavior._wrapObserver(this._invokeEvent.bindAsEventListener(this, pair.value)));
+    }.bind(this));
+  },
+  _invokeEvent: function(event, rules) {
+    var element;
+    for (var selector in rules) {
+      if (element = event.findElement(selector)) {
+        var observer = rules[selector], assignedObservers = element.retrieve('_lowpro_assigned_observers_') || [];
+        if (!assignedObservers.include(observer)) {
+          var behavior = observer.attach ? observer.attach(element) : observer.call(element);
+          assignedObservers.push(observer);
+          element.store('_lowpro_assigned_observers_', assignedObservers);
+          return observer.prototype["on"+event.type].call(behavior, event);
+        }
+      }
+    }
+  }
+});
 
 
 
@@ -273,14 +309,16 @@ Remote = Behavior.create({
 Remote.Base = {
   initialize : function(options) {
     this.options = Object.extend({
-      evaluateScripts : true
+      evalScripts : true
     }, options || {});
     
     this._bindCallbacks();
   },
   _makeRequest : function(options) {
-    if (options.update) new Ajax.Updater(options.update, options.url, options);
-    else new Ajax.Request(options.url, options);
+    if (!options.confirm || confirm(options.confirm)) {
+      if (options.update) new Ajax.Updater(options.update, options.url, options);
+      else new Ajax.Request(options.url, options);
+    }
     return false;
   },
   _bindCallbacks: function() {
@@ -304,14 +342,14 @@ Remote.Form = Behavior.create(Remote.Base, {
     var sourceElement = e.element();
     
     if (['input', 'button'].include(sourceElement.nodeName.toLowerCase()) && 
-        sourceElement.type == 'submit')
+        ['submit', 'image'].include(sourceElement.type))
       this._submitButton = sourceElement;
   },
   onsubmit : function() {
     var options = Object.extend({
       url : this.element.action,
       method : this.element.method || 'get',
-      parameters : this.element.serialize({ submit: this._submitButton.name })
+      parameters : this.element.serialize({ submit: this._submitButton ? this._submitButton.name : null })
     }, this.options);
     this._submitButton = null;
     return this._makeRequest(options);
@@ -336,4 +374,5 @@ Observed = Behavior.create({
                                       new Form.Element.EventObserver(this.element, this.callback);
   }
 });
+
 
