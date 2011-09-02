@@ -42,7 +42,7 @@ module ApplicationHelper
   end
 
   def ajax_spinner_for(id, spinner="spinner.gif")
-    "<img src='/images/#{spinner}' style='display:none; vertical-align:middle;' id='#{id.to_s}_spinner'> ".html_safe
+    "<img src='#{asset_path "spinner"}' style='display:none; vertical-align:middle;' id='#{id.to_s}_spinner'>".html_safe
   end
 
   def avatar_for(user, size=32)
@@ -75,7 +75,7 @@ module ApplicationHelper
   end
 
   def ajax_spinner_for(id, spinner="spinner.gif")
-    "<img src='/images/#{spinner}' style='display:none; vertical-align:middle;' id='#{id.to_s}_spinner'/> ".html_safe
+    "<img src='#{asset_path spinner}' style='display:none; vertical-align:middle;' id='#{id.to_s}_spinner'/>".html_safe
   end
 
   def edited_on_tag(post)

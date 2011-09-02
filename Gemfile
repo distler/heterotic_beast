@@ -1,11 +1,12 @@
 source "http://rubygems.org"
 
-gem 'rails', '3.0.10'
+gem 'rails', '3.1.0'
 gem 'ruby-openid', '>= 2.0.4', :require => "openid"
 gem 'rack-openid'
 gem 'will_paginate', "~> 3.0"
 gem "itextomml", ">=1.4.6"
 gem "mongrel", ">=1.2.0.pre2"
+gem "prototype-rails", "~> 3.1.0"
 
 gem 'acts_as_list'
 gem 'acts_as_state_machine'

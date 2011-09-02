@@ -3,8 +3,8 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title><%= current_site && current_site.name || I18n.t('txt.beast_title', :default => 'Altered Beast') %><%= " - " + @page_title if @page_title %></title>
-    <%= stylesheet_link_tag %w(display captcha syntax) %>
-    <%= javascript_include_tag %w(prototype effects lowpro rails application), :cache => "beast" %>
+    <%= stylesheet_link_tag 'application' %>
+    <%= javascript_include_tag 'application' %>
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     MathML: { useMathMLspacing: true },
@@ -15,7 +15,7 @@
 <script type="text/javascript">
   if (!(Prototype.Browser.Gecko || navigator.userAgent.match(/MathPlayer/))) {
     var s = document.createElement('script');
-    s.src = "<%= compute_public_path('MathJax.js', 'MathJax').split('?')[0] %>?config=MML_HTMLorMML";
+    s.src = "<%= '/assets/MathJax/MathJax.js' %>?config=MML_HTMLorMML";
     document.querySelector('head').appendChild(s);
     window.addEventListener("load", function(){window._onload_fired_ = true} , false);        
   };
