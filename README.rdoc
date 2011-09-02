@@ -36,6 +36,10 @@ Check out the code via git:
     $ ruby bundle
     $ ruby bundle exec rake app:bootstrap
 
+    and, optionally, 
+
+    $ ruby bundle exec rake assets:precompile
+
     Follow the instructions to create your database and load users.
     Start the application with 
     
