@@ -35,10 +35,10 @@ Check out the code via git:
     $ cd heterotic_beast
     $ ruby bundle
     $ ruby bundle exec rake app:bootstrap
-
-    and, optionally, 
-
     $ ruby bundle exec rake assets:precompile
+
+    The last one is optional (it takes a while to execute) but will speed
+    access to your files, if you are running under Passenger. 
 
     Follow the instructions to create your database and load users.
     Start the application with 
