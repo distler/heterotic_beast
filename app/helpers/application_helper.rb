@@ -41,10 +41,6 @@ module ApplicationHelper
     end
   end
 
-  def ajax_spinner_for(id, spinner="spinner.gif")
-    "<img src='#{asset_path "spinner"}' style='display:none; vertical-align:middle;' id='#{id.to_s}_spinner'>".html_safe
-  end
-
   def avatar_for(user, size=32)
     t = " <svg class='photo' xmlns='http://www.w3.org/2000/svg' height='#{size-6}' width='#{size-6}'>\n" +
         "  <use xlink:href='#svg_logo_svg' xmlns:xlink='http://www.w3.org/1999/xlink'/>\n </svg>\n"

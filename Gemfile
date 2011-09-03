@@ -7,6 +7,7 @@ gem 'will_paginate', "~> 3.0"
 gem "itextomml", ">=1.4.6"
 gem "mongrel", ">=1.2.0.pre2"
 gem "prototype-rails", "~> 3.1.0"
+gem 'sass-rails'
 gem 'uglifier'
 
 gem 'acts_as_list'

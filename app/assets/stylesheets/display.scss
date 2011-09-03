@@ -257,7 +257,7 @@ ul.talking li span
 
 ul.flat li
 {
-	background:url(<%= asset_path 'small_circle.gif' %>) no-repeat 5px 6px;
+	background: image-url('small_circle.gif') no-repeat 5px 6px;
 	padding-left:15px;
 }
 ul.ways li span
@@ -855,7 +855,7 @@ p.online {margin-bottom:0;}
 img.icon
 {
 	background:#696;
-	background-image: url(<%= asset_path 'clearbits/bg_rounded.gif' %>);
+	background-image: image-url('clearbits/bg_rounded.gif');
 	background-repeat: no-repeat;
 	vertical-align: bottom;
 }
@@ -874,7 +874,7 @@ img.green { background-color:#0c0;}
 
 div.editbox
 {
-	background:url(<%= asset_path 'reply_background.png' %>);
+	background: image-url('reply_background.png');
 	border:2px solid #333;
 	border-width:2px 0;
 	position:fixed;
