@@ -305,7 +305,10 @@
       formatting_bold: '**fett**'
       formatting_italics: '_kursiv_'
       formatting_blockquote: '&gt; <span>(Zitat)</span>'
-      formatting_list: '* oder 1.  <span>Aufzählungslisten</span>'
+      formatting_code: '`quellcode`'
+      formatting_horizontal_rule: '*** <span>(Horizontale)</span>'
+      formatting_list: '* <span>oder</span> 1.  <span>(Aufzählungslisten)</span>'
+      formatting_link: '[IBM](http://www.ibm.com) <span>(link)</span>'
 
     moderator:
       zero: Moderator

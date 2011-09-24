@@ -5,9 +5,13 @@
   <li><%= t 'txt.views_posts.formatting_bold', :default => '**bold**' %></li>
   <li><%= t 'txt.views_posts.formatting_italics', :default => '*italics*, _italics_' %></li>
   <li><%= (t 'txt.views_posts.formatting_blockquote', :default => '&gt; <span>(quotes)</span>').html_safe %></li>
-  <li>[IBM](http://www.ibm.com)</li>
-  <li><%= (t 'txt.views_posts.formatting_list', :default => '* or 1. <span>(lists)</span>').html_safe %></li>
+  <li>[IBM](http://www.ibm.com) <span>(link)</span></li>
+  <li>![alt text](http://www.foo.com/image.jpg)</li>
+  <li><%= t 'txt.views_posts.formatting_icode', :default => '`code`' %></li>
+  <li><%= (t 'txt.views_posts.formatting__horizontal_rule', :default => '*** <span>(horizontal rule)</span>').html_safe %></li>
+  <li><%= (t 'txt.views_posts.formatting_list', :default => '* <span>or</span> 1. <span>(lists)</span>').html_safe %></li>
 </ul>
+<p class="help"><a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> | <a href="http://michelf.com/projects/php-markdown/extra/">Markdown Extra</a> | <a href="http://maruku.rubyforge.org/proposal.html">Metadata</a> | <a href="">itex</a></p>
 </div>
 
 <script type="text/javascript">
@@ -17,5 +21,8 @@
   } else {
     t = $('post_body');
   }
-  setupSVGedit(t, '<%= asset_path "svg-edit/editor/svg-editor.html" %>')
+  setupSVGedit(t, '<%= asset_path "svg-edit/editor/svg-editor.html" %>');
+  $('MarkupHelp').on('click', 'p.help a', function(ev,el){ Event.stop(ev);
+    window.open(el.href,'','scrollbars=yes,menubar=no,height=600,width=800,resizable=yes,toolbar=no,location=no,status=no');
+  });
 </script>

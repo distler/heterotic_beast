@@ -665,7 +665,7 @@ table.topics tr td .flag {
 
 .button_or
 {
-  color:#666;
+  color:#999;
   padding-left:0.5em;
   font-size:0.75em;
   font-family: 'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
@@ -896,12 +896,13 @@ div.editbox p { margin:0.5em 0;}
 div.editbox textarea
 {
   width:100%;
+  height:18em;
 	background:white;
 	opacity:1;
 	font-size:0.8em;
 	font-family: 'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
 }
-div.editbox .button_or a
+div.editbox .button_or a, #MarkupHelp a
 {
   color:#ccc;
 }
@@ -933,7 +934,7 @@ div.editbox h5
 }
 
 div.editbox p.help span,
-div.editbox ul.help span { color:#666; }
+div.editbox ul.help span { color:#999; }
 div.editbox p.help,
 div.editbox ul.help
 {
@@ -946,7 +947,7 @@ div.editbox ul.help { margin:0; }
 
 div.editbox ul.help {
   list-style-type:none; }
-  
+
 #monitor_topic a
 {
   color: #666;
