@@ -936,7 +936,7 @@ div.editbox h5
 div.editbox p.help span,
 div.editbox ul.help span { color:#999; }
 div.editbox p.help,
-div.editbox ul.help
+#MarkupHelp ul.help
 {
   padding:3px 10px;
   font-size:0.75em;
@@ -945,8 +945,20 @@ div.editbox ul.help
 }
 div.editbox ul.help { margin:0; }
 
-div.editbox ul.help {
-  list-style-type:none; }
+#MarkupHelp ul.help {
+  list-style-type:none;padding:0; }
+
+#right #MarkupHelp {
+ width:18em
+}
+#right #MarkupHelp ul.help,
+#right #MarkupHelp p.help,
+#right #MarkupHelp p.help a {
+ color:#000;
+}
+#right #MarkupHelp ul.help span {
+  color:#660;
+}
 
 #monitor_topic a
 {

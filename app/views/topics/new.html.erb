@@ -6,10 +6,15 @@
 <h1 id="new_topic"><%= I18n.t 'txt.new_topic', :default => 'New topic' %></h1>
 <p class="subtitle"><%= I18n.t 'txt.by_user', :default => 'by %{user}', :user => current_user.display_name %></p>
 
+<% content_for :right do %>
+<div id="MarkupHelp">
+<%= render :partial => "posts/formatting" %>
+</div>
+<% end %>
+
 <%= form_for [@forum, @topic] do |f| %>
   <%= render :partial => "form", :object => f %>
   <%= submit_tag I18n.t('txt.post_topic', :default => 'Post topic') %>
 <% end %>
 
 <%= javascript_tag "$('topic_title').focus();" %>
-
