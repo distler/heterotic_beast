@@ -7,9 +7,7 @@
 <p class="subtitle"><%= I18n.t 'txt.by_user', :default => 'by %{user}', :user => current_user.display_name %></p>
 
 <% content_for :right do %>
-<div id="MarkupHelp">
-<%= render :partial => "posts/formatting" %>
-</div>
+  <%= render :partial => "posts/formatting" %>
 <% end %>
 
 <%= form_for [@forum, @topic] do |f| %>
