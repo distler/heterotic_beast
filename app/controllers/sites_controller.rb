@@ -3,7 +3,7 @@ class SitesController < ApplicationController
   before_filter :find_site, :only => [:show, :edit, :update, :destroy]
 
   def index
-    @sites = Site.paginate(:all, :page => current_page, :order => 'host ASC')
+    @sites = Site.paginate(:page => current_page, :order => 'host ASC')
 
     respond_to do |format|
       format.html # index.html.erb
