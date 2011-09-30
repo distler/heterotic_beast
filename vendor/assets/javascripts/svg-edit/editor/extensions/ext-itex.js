@@ -19,7 +19,7 @@ svgEditor.addExtension("itex", function(S) {
 			se_ns = "http://svg-edit.googlecode.com",
 			htmlns = "http://www.w3.org/1999/xhtml",
 			mathns = "http://www.w3.org/1998/Math/MathML",
-			ajaxEndpoint = "../../itex",
+			ajaxEndpoint = "../../../itex",
 			editingitex = false,
 			svgdoc = S.svgroot.parentNode.ownerDocument,
 			started,
