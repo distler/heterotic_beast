@@ -3,6 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title><%= current_site && current_site.name || I18n.t('txt.beast_title', :default => 'Altered Beast') %><%= " - " + @page_title if @page_title %></title>
+    <%= favicon_link_tag %>
     <%= stylesheet_link_tag 'application' %>
     <%= javascript_include_tag 'application' %>
 <script type="text/x-mathjax-config">
