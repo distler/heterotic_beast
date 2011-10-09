@@ -53,7 +53,7 @@ class PostsController < ApplicationController
         format.xml  { render :xml  => @post.errors, :status => :unprocessable_entity }
       else
         flash[:notice] = 'Post was successfully created.'
-        format.html { redirect_to(forum_topic_post_path(@forum, @topic, @post, :anchor => dom_id(@post))) }
+        format.html { redirect_to(forum_topic_path(@forum, @topic, {:anchor => dom_id(@post), :page => @topic.last_page})) }
         format.xml  { render :xml  => @post, :status => :created, :location => forum_topic_post_url(@forum, @topic, @post) }
       end
     end
@@ -63,7 +63,7 @@ class PostsController < ApplicationController
     respond_to do |format|
       if @post.update_attributes(params[:post])
         flash[:notice] = 'Post was successfully updated.'
-        format.html { redirect_to(forum_topic_path(@forum, @topic, :anchor => dom_id(@post))) }
+        format.html { redirect_to(forum_topic_path(@forum, @topic, {:anchor => dom_id(@post), :page => @topic.post_page(@post)})) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

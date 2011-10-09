@@ -58,6 +58,14 @@ class Topic < ActiveRecord::Base
     [(posts_count.to_f / Post.per_page.to_f).ceil.to_i, 1].max
   end
 
+  def post_number(post)
+    self.posts.where("id <= #{post.id}").count
+  end
+
+  def post_page(post)
+    [(post_number(post).to_f / Post.per_page.to_f).ceil.to_i, 1].max
+  end
+
   def update_cached_post_fields(post)
     # these fields are not accessible to mass assignment
     if remaining_post = post.frozen? ? recent_post : post
