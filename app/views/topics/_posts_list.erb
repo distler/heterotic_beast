@@ -65,6 +65,7 @@
 <%= will_paginate @posts %>
 <script type='text/javascript'><!--//--><![CDATA[//><!--
 if (history  && history.replaceState && $$('.pagination')) {
-    $$('.pagination a').invoke('writeAttribute','data-remote')
+    $$('.pagination a').invoke('writeAttribute','data-remote');
+    $$('.edit a.utility').invoke('writeAttribute','data-remote');
 };
 //--><!]]></script>
