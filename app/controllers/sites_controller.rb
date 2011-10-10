@@ -38,8 +38,10 @@ class SitesController < ApplicationController
       if @site.save
         flash[:notice] = 'Site was successfully created.'
         if logged_in?
+          # Clone current user as first (admin) user of new site
           new_user = current_user.dup
           new_user.site_id = @site.id
+          new_user.posts_count = 0
           new_user.save
         else
           flash[:notice] += ' Please create your account.'
