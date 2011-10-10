@@ -23,7 +23,6 @@ class User < ActiveRecord::Base
   attr_readonly :posts_count, :last_seen_at
 
   scope :named_like, lambda { |name| where("users.display_name like ? or users.login like ?", "#{name}%", "#{name}%") }
-  scope :online, lambda { where("users.last_seen_at >= ?", 10.minutes.ago.utc) }
 
   class << self
 

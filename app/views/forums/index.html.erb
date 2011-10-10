@@ -62,7 +62,7 @@
   <%= link_to I18n.t('txt.show_recent_posts', :default => 'Show recent posts'), posts_path %>
 </p>
 
-<% if (online_users = User.online).length > 0 %>
+<% if (online_users = current_site.users_online).length > 0 %>
 <div class="stats">
   <div class="users">
     <%= I18n.t('txt.users_online', :default => 'Users online') %>: <%= (online_users.map { |u| link_to content_tag(:strong, u.display_name), user_path(u) } * ", ").html_safe %><br />

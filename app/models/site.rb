@@ -11,7 +11,7 @@ class Site < ActiveRecord::Base
   validates_presence_of   :name
   validates_uniqueness_of :host
 
-  attr_readonly :admin, :posts_count, :users_count, :topics_count
+  attr_readonly :admin, :posts_count, :users_count, :topics_count, :users_online
 
   class << self
 
@@ -28,6 +28,9 @@ class Site < ActiveRecord::Base
 
   end
 
+  def users_online
+      User.where("users.last_seen_at >= ? and users.site_id = ?", 10.minutes.ago.utc, id)
+  end
 
   def admin
      User.where(:admin => true).first
