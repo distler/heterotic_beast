@@ -3,7 +3,7 @@
 <% else %>
   $('posts_list').update("<%= escape_javascript(render(:partial => 'posts_list', :object => @posts, :as => :posts))%>");
 <% end %>
-history.replaceState(null, 'Posts', "<%= posts_path %>.html<%= 
+history.replaceState(null, 'Posts', "<%= posts_path %><%= 
   p = []
   p << %{monitored=true} if @monitored
   p << %{page=} + params[:page] if params[:page]
