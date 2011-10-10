@@ -38,7 +38,7 @@ class SitesController < ApplicationController
       if @site.save
         flash[:notice] = 'Site was successfully created.'
         if logged_in?
-          new_user = current_user.clone
+          new_user = current_user.dup
           new_user.site_id = @site.id
           new_user.save
         else
