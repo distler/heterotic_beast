@@ -36,9 +36,9 @@ if (history && history.replaceState && $$('.pagination')) {
   $$('.pagination a').invoke('observe', 'click', function(){
       <%= p = Hash.new
        p.update('page' => params[:page].to_i) if params[:page]
-       p.update('utf8' => j(params[:utf8])) if params[:utf8]
-       p.update('q' => j(@q)) if @q
-       p.update('commit' => j(params[:commit])) if params[:commit]
+       p.update('utf8' => params[:utf8]) if params[:utf8]
+       p.update('q' => @q) if @q
+       p.update('commit' => params[:commit]) if params[:commit]
        modify_history('pushState', 'Users', users_path, p) %>
   });
   $$('.pagination a').invoke('writeAttribute','data-remote')

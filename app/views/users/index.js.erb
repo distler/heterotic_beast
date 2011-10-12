@@ -1,7 +1,7 @@
 $('users_list').update("<%= escape_javascript(render(:partial => 'users_list'))%>");
 <%= p = Hash.new
   p.update('page' => params[:page].to_i) if params[:page]
-  p.update('utf8' => j(params[:utf8])) if params[:utf8]
-  p.update('q' => j(@q)) if @q
-  p.update('commit' => j(params[:commit])) if params[:commit]
+  p.update('utf8' => params[:utf8]) if params[:utf8]
+  p.update('q' => @q) if @q
+  p.update('commit' => params[:commit]) if params[:commit]
   modify_history('replaceState', 'Users', users_path, p) %>
