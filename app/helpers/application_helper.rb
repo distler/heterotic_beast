@@ -48,6 +48,19 @@ module ApplicationHelper
     t.html_safe
   end
 
+  def modify_history(function, name, path, params_hash=nil)
+    state = "null"
+    query_string = "?"
+    if params_hash
+       state = params_hash.to_json
+       params_hash.each do |k,v|
+         query_string << "#{k}=#{v}&"
+       end
+    end
+    query_string = query_string.chop
+    %{history.#{function}(#{state}, '#{j(name)}', '#{j(path+query_string)}');}.html_safe
+  end
+
   def search_path(atom = false)
     options = @q.blank? ? {} : {:q => @q}
     prefix = 

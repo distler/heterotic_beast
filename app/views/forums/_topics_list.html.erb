@@ -64,14 +64,15 @@
 <%= will_paginate topics %>
 
 <script type='text/javascript'><!--//--><![CDATA[//><!--
-if (history  && history.replaceState) {
+if (history && history.replaceState) {
   if ($('filter_link')) $('filter_link').writeAttribute('data-remote');
   if ($$('.pagination')) {
     $$('.pagination a').invoke('writeAttribute','data-remote'); 
     $$('.pagination a').invoke('observe', 'click', function(){
-      history.pushState({page: "<%=  params[:page] ? params[:page] : '1' %>"<%= %{, monitored: 'true'} if @monitored %>},
-      "<%= escape_javascript(@forum.name) %>",
-      "<%= @forum.permalink %>.html<%=  %{?page=} + params[:page] if params[:page] %>");
+      <%= p = Hash.new
+       p.update('monitored' => 'true') if @monitored
+       p.update('page' => params[:page].to_i) if params[:page]
+       modify_history('pushState', @forum.name, "#{@forum.permalink}.html", p) %>
     });
   }
 };

@@ -34,18 +34,12 @@
 <script type='text/javascript'><!--//--><![CDATA[//><!--
 if (history && history.replaceState && $$('.pagination')) {
   $$('.pagination a').invoke('observe', 'click', function(){
-    history.pushState({page: "<%= params[:page] ? params[:page] : '1' %>"<% if params[:utf8]
-          %>, utf8: "<%= params[:utf8] %>"<% end %><% if @q
-          %>, q: "<%= @q %>"<% end%><% if params[:commit]
-          %>, commit: "<%= params[:commit] %>"<% end%>},
-      'Users', "<%= users_path %><%= 
-      p = []
-      p << %{page=} + params[:page] if params[:page]
-      p << %{utf8=} + params[:utf8] if params[:utf8]
-      p << %{q=} + @q if @q
-      p << %{comit=} + params[:commit] if params[:commit]
-      %{?} + p.join(%{&}) unless p.empty?
-    %>");
+      <%= p = Hash.new
+       p.update('page' => params[:page].to_i) if params[:page]
+       p.update('utf8' => j(params[:utf8])) if params[:utf8]
+       p.update('q' => j(@q)) if @q
+       p.update('commit' => j(params[:commit])) if params[:commit]
+       modify_history('pushState', 'Users', users_path, p) %>
   });
   $$('.pagination a').invoke('writeAttribute','data-remote')
 };
