@@ -21,7 +21,6 @@ class User < ActiveRecord::Base
   has_permalink :login, :scope => :site_id
 
   attr_readonly :posts_count, :last_seen_at
-self.per_page=4
 
   scope :named_like, lambda { |name| where("users.display_name like ? or users.login like ?", "#{name}%", "#{name}%") }
 
