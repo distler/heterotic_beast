@@ -1,4 +1,3 @@
 $('posts_list').update("<%= escape_javascript(render(:partial => 'posts_list'))%>");
-<%= p = Hash.new
-   p.update('page' => params[:page].to_i) if params[:page]
+<%= p = {'page' => params[:page].to_i} if params[:page]
    modify_history('replaceState', @topic.title, "#{@topic.permalink}.html", p) %>

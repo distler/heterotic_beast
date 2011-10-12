@@ -66,8 +66,7 @@
 <script type='text/javascript'><!--//--><![CDATA[//><!--
 if (history && history.replaceState && $$('.pagination')) {
   $$('.pagination a').invoke('observe', 'click', function(){
-      <%= p = Hash.new
-       p.update('page' => params[:page].to_i) if params[:page]
+      <%= p = {'page' => params[:page].to_i} if params[:page]
        modify_history('pushState', @topic.title, "#{@topic.permalink}.html", p) %>
   });
   $$('.pagination a').invoke('writeAttribute','data-remote');

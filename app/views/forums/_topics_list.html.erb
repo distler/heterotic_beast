@@ -70,8 +70,8 @@ if (history && history.replaceState) {
     $$('.pagination a').invoke('writeAttribute','data-remote'); 
     $$('.pagination a').invoke('observe', 'click', function(){
       <%= p = Hash.new
-       p.update('monitored' => 'true') if @monitored
        p.update('page' => params[:page].to_i) if params[:page]
+       p.update('monitored' => 'true') if @monitored
        modify_history('pushState', @forum.name, "#{@forum.permalink}.html", p) %>
     });
   }
