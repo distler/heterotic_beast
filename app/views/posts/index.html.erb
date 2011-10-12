@@ -15,3 +15,11 @@
  <%= render(:partial => 'posts_list', :object => @posts, :as => :posts) %>
 <% end %>
 </div>
+
+<script type='text/javascript'><!--//--><![CDATA[//><!--
+if (history  && history.replaceState && $$('.pagination')) {
+  Event.observe(window, 'popstate', function(event){
+    new Ajax.Request("<%= posts_path %>", {method: 'get', parameters: event.state})
+  });
+};
+//--><!]]></script>

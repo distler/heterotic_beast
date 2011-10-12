@@ -65,7 +65,12 @@
 <%= will_paginate @posts %>
 <script type='text/javascript'><!--//--><![CDATA[//><!--
 if (history  && history.replaceState && $$('.pagination')) {
-    $$('.pagination a').invoke('writeAttribute','data-remote');
-    $$('.edit a.utility').invoke('writeAttribute','data-remote');
+  $$('.pagination a').invoke('observe', 'click', function(){
+    history.pushState({page: "<%=  params[:page] ? params[:page] : '1' %>"},
+    "<%= escape_javascript(@topic.title) %>",
+    "<%= @topic.permalink %>.html<%=  %{?page=} + params[:page] if params[:page] %>");
+  });
+  $$('.pagination a').invoke('writeAttribute','data-remote');
+  $$('.edit a.utility').invoke('writeAttribute','data-remote');
 };
 //--><!]]></script>

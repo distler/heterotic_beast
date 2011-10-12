@@ -32,7 +32,21 @@
 <%= will_paginate @users %>
 
 <script type='text/javascript'><!--//--><![CDATA[//><!--
-if (history  && history.replaceState && $$('.pagination')) {
-    $$('.pagination a').invoke('writeAttribute','data-remote')
+if (history && history.replaceState && $$('.pagination')) {
+  $$('.pagination a').invoke('observe', 'click', function(){
+    history.pushState({page: "<%= params[:page] ? params[:page] : '1' %>"<% if params[:utf8]
+          %>, utf8: "<%= params[:utf8] %>"<% end %><% if @q
+          %>, q: "<%= @q %>"<% end%><% if params[:commit]
+          %>, commit: "<%= params[:commit] %>"<% end%>},
+      'Users', "<%= users_path %><%= 
+      p = []
+      p << %{page=} + params[:page] if params[:page]
+      p << %{utf8=} + params[:utf8] if params[:utf8]
+      p << %{q=} + @q if @q
+      p << %{comit=} + params[:commit] if params[:commit]
+      %{?} + p.join(%{&}) unless p.empty?
+    %>");
+  });
+  $$('.pagination a').invoke('writeAttribute','data-remote')
 };
 //--><!]]></script>

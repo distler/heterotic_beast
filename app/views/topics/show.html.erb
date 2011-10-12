@@ -116,3 +116,11 @@
   <%= link_to I18n.t('txt.forums', :default => 'Forums'), root_path %> <span class="arrow">&#x2192;</span>
   <%= link_to @topic.forum.name, forum_path(@topic.forum) %> <span class="arrow">&#x2192;</span>
 </div>
+
+<script type='text/javascript'><!--//--><![CDATA[//><!--
+if (history  && history.replaceState && $$('.pagination')) {
+  Event.observe(window, 'popstate', function(event){
+    new Ajax.Request("<%= @topic.permalink %>", {method: 'get', parameters: event.state})
+  });
+};
+//--><!]]></script>

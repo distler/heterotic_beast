@@ -44,3 +44,11 @@
 <% if logged_in? %>
   <p><%= link_to I18n.t('txt.new_topic', :default => 'New topic'), new_forum_topic_path(@forum), :class => "utility" %></p>
 <% end%>
+
+<script type='text/javascript'><!--//--><![CDATA[//><!--
+if (history  && history.replaceState && $$('.pagination')) {
+  Event.observe(window, 'popstate', function(event){
+    new Ajax.Request("<%= @forum.permalink %>", {method: 'get', parameters: event.state})
+  });
+};
+//--><!]]></script>

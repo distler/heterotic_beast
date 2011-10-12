@@ -38,9 +38,26 @@
 </table>
 
 <%= will_paginate posts %>
-
 <script type='text/javascript'><!--//--><![CDATA[//><!--
-if (history  && history.replaceState && $$('.pagination')) {
-    $$('.pagination a').invoke('writeAttribute','data-remote')
+if (history && history.replaceState && $$('.pagination')) {
+  $$('.pagination a').invoke('observe', 'click', function(){
+      history.pushState({page: "<%= params[:page] ? params[:page] : '1' %>"<% if @monitored
+          %>, monitored: "true"<% end %><% if params[:utf8]
+          %>, utf8: "<%= params[:utf8] %>"<% end %><% if @q
+          %>, q: "<%= @q.to_json %>"<% end %><%=
+        %{, user_id: } + params[:user_id] if params[:user_id] %><%=
+        %{, topic_id: } + params[:topic_id] if params[:topic_id] %>},
+          'Posts', "<%= posts_path %><%= 
+        p = []
+        p << %{monitored=true} if @monitored
+        p << %{page=} + params[:page] if params[:page]
+        p << %{utf8=} + escape_javascript(params[:utf8]) if params[:utf8]
+        p << %{q=} + @q if @q
+        p << %{user_id=} + params[:user_id] if params[:user_id]
+        p << %{topic_id=} + params[:topic_id] if params[:topic_id]
+        %{?} + p.join(%{&}) unless p.empty?
+      %>");
+    });
+  $$('.pagination a').invoke('writeAttribute','data-remote')
 };
 //--><!]]></script>

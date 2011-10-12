@@ -15,3 +15,11 @@
 <div id='users_list'>
   <%= render(:partial => 'users_list') %>
 </div>
+
+<script type='text/javascript'><!--//--><![CDATA[//><!--
+if (history && history.replaceState && $$('.pagination')) {
+  Event.observe(window, 'popstate', function(event){
+    new Ajax.Request("<%= users_path %>", {method: 'get', parameters: event.state})
+  });
+};
+//--><!]]></script>

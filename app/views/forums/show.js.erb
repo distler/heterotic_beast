@@ -3,9 +3,10 @@
 <% else %>
   $('topics_list').update("<%= escape_javascript(render(:partial => 'topics_list', :object => @topics, :as => :topics))%>");
 <% end %>
-history.replaceState(null, "<%= @forum.name %>", "<%= @forum.permalink %><%= 
-  p = []
-  p << %{monitored=true} if @monitored
-  p << %{page=} + params[:page] if params[:page]
-  %{?} + p.join(%{&}) unless p.empty?
+history.replaceState({page: "<%= params[:page] ? params[:page] : '1' %>"<%= %{, monitored: 'true'} if @monitored %>},
+  "<%= escape_javascript(@forum.name) %>", "<%= @forum.permalink %>.html<%= 
+    p = []
+    p << %{monitored=true} if @monitored
+    p << %{page=} + params[:page] if params[:page]
+    %{?} + p.join(%{&}) unless p.empty?
 %>");

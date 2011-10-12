@@ -3,7 +3,14 @@
 <% else %>
   $('posts_list').update("<%= escape_javascript(render(:partial => 'posts_list', :object => @posts, :as => :posts))%>");
 <% end %>
-history.replaceState(null, 'Posts', "<%= posts_path %><%= 
+history.replaceState({page: "<%= params[:page] ? params[:page] : '1' %>"<%=
+  %{, monitored: 'true'} if @monitored %><% if
+        @monitored %>, monitored: "true"<% end %><% if params[:utf8]
+        %>, utf8: "<%= params[:utf8] %>"<% end %><% if
+        @q%>, q: "<%= @q %>"<% end%><%=
+  %{, user_id: } + params[:user_id] if params[:user_id] %><%=
+  %{, topic_id: } + params[:topic_id] if params[:topic_id] %>},
+  'Posts', "<%= posts_path %><%= 
   p = []
   p << %{monitored=true} if @monitored
   p << %{page=} + params[:page] if params[:page]
