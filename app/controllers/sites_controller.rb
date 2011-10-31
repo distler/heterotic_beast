@@ -84,6 +84,11 @@ class SitesController < ApplicationController
     @site.nil? or @site.new_record? # or current_site == Site.first
   end
 
+  def current_site
+    @current_site ||= Site.find_by_host(request.host.dup)
+  end
+  helper_method :current_site
+
   protected
 
     def find_site
