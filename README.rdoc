@@ -41,6 +41,7 @@ Check out the code via git:
     access to your files, if you are running under Passenger. 
 
     Follow the instructions to create your database and load users.
+    Configure how you want to deliver the signup emails in config/initializers/mail.rb .
     Start the application with 
     
     $ script/rails server -d -e production

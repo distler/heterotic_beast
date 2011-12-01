@@ -1,6 +1,5 @@
 # coding: utf-8
 class UserMailer < ActionMailer::Base
-  self.smtp_settings[:enable_starttls_auto] = false
   default :from => "your_domain@example.com"
 
   def signup_notification(user)
