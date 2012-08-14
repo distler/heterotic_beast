@@ -14,6 +14,7 @@ gem 'acts_as_list'
 gem 'acts_as_state_machine'
 gem 'permalink_fu'
 gem 'nokogiri'
+gem "maruku", :git => 'http://github.com/distler/maruku.git', :branch => 'nokogiri'
 gem 'rake'
 
 group :development, :test do
@@ -26,5 +27,5 @@ group :development, :test do
 end
 
 group :production do
-  gem 'mysql2', '~> 0.3.0'
+  gem 'mysql2',  :git => 'http://github.com/brianmario/mysql2.git'
 end
