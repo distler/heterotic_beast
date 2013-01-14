@@ -6,6 +6,10 @@
       <label><%= I18n.t 'txt.views_forums.title', :default => 'Title' %></label><br />
       <%= form.text_field :name, :class => "primary" %>
     </td>
+    <td>
+     <label><%= I18n.t 'txt.views_forums.state', :default => 'State' %></label><br />
+     <%= select(:forum, :state, [['public','public'],['private','private']]) %>
+    </td>
     <td style="text-align:right">
       <label><%= I18n.t 'txt.views_forums.position', :default => 'Position' %></label><br />
       <%= form.text_field :position, :size => 5 %>

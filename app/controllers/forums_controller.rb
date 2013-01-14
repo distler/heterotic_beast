@@ -8,7 +8,7 @@ class ForumsController < ApplicationController
     # reset the page of each forum we have visited when we go back to index
     session[:forums_page] = nil
 
-    @forums = current_site.ordered_forums
+    @forums = admin? ? current_site.all_forums : current_site.ordered_forums
 
     respond_to do |format|
       format.html { set_content_type_header } # index.html.erb
@@ -98,7 +98,7 @@ class ForumsController < ApplicationController
   protected
 
     def find_forum
-      @forum = current_site.forums.find_by_permalink!(params[:id])
+      @forum = admin? ? current_site.all_forums.find_by_permalink!(params[:id]) : current_site.forums.find_by_permalink!(params[:id])
     end
 
 end

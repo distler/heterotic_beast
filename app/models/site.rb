@@ -4,7 +4,8 @@ class Site < ActiveRecord::Base
   has_many :users, :conditions => {:state => 'active'}
   has_many :all_users, :class_name => 'User'
 
-  has_many :forums
+  has_many :forums, :conditions => {:state => 'public'}
+  has_many :all_forums, :class_name => 'Forum'
   has_many :topics, :through => :forums
   has_many :posts,  :through => :forums
 
