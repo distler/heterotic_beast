@@ -44,7 +44,7 @@ module ApplicationHelper
   def avatar_for(user, size=32)
     t = " <svg class='photo' xmlns='http://www.w3.org/2000/svg' height='#{size-6}' width='#{size-6}'>\n" +
         "  <use xlink:href='#svg_logo_svg' xmlns:xlink='http://www.w3.org/1999/xlink'/>\n </svg>\n"
-    t = "<object width='#{size}' height='#{size}' type='image/jpeg' data='http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(user.email.downcase.strip)}?rating=PG&amp;size=#{size}&amp;d=404'>\n" + t + "</object>" if (user.email and !(user.email.strip.empty?))
+    t = "<object width='#{size}' height='#{size}' type='image/jpeg' data='https://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(user.email.downcase.strip)}?rating=PG&amp;size=#{size}&amp;d=404'>\n" + t + "</object>" if (user.email and !(user.email.strip.empty?))
     t.html_safe
   end
 
