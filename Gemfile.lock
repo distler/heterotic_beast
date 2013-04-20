@@ -6,16 +6,22 @@ GIT
 
 GIT
   remote: http://github.com/distler/maruku.git
-  revision: eef9c5cdcdb8609c64b6a3a5e61a4e70a5c614bf
+  revision: d38218de5858ac09a9471991aee6c48b7a4e38a1
   branch: nokogiri
   specs:
     maruku (0.7.1.beta1)
       nokogiri (~> 1.5, >= 1.5.6)
 
+GIT
+  remote: http://github.com/distler/syntax.git
+  revision: bf39f212ed23266739f9397b1655ec9d4c07879d
+  specs:
+    syntax (1.1.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
-    ZenTest (4.9.0)
+    ZenTest (4.9.1)
     actionmailer (3.1.12)
       actionpack (= 3.1.12)
       mail (~> 2.4.4)
@@ -169,5 +175,6 @@ DEPENDENCIES
   ruby-openid (>= 2.0.4)
   sass-rails (= 3.1.4)
   sqlite3-ruby
+  syntax!
   uglifier
   will_paginate (~> 3.0)

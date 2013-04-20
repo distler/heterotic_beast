@@ -14,6 +14,7 @@ gem 'acts_as_list'
 gem 'acts_as_state_machine'
 gem 'permalink_fu'
 gem 'nokogiri'
+gem 'syntax', :git => 'http://github.com/distler/syntax.git'
 gem "maruku", :git => 'http://github.com/distler/maruku.git', :branch => 'nokogiri'
 gem 'rake'
 
