@@ -3,6 +3,7 @@ source "http://rubygems.org"
 gem 'rails', '3.1.12'
 gem 'ruby-openid', '>= 2.0.4', :require => "openid"
 gem 'rack-openid'
+gem 'open_id_authentication'
 gem 'will_paginate', "~> 3.0"
 gem "itextomml", ">=1.4.10"
 gem "mongrel", ">=1.2.0.pre2"
@@ -14,7 +15,9 @@ gem 'acts_as_list'
 gem 'acts_as_state_machine'
 gem 'permalink_fu'
 gem 'nokogiri'
+gem 'syntax', :git => 'http://github.com/distler/syntax.git'
 gem "maruku", :git => 'http://github.com/distler/maruku.git', :branch => 'nokogiri'
+gem "auto_migrations", :git => 'https://github.com/yzhang/auto_migrations.git'
 gem 'rake'
 
 group :development, :test do
