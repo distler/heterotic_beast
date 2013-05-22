@@ -10,7 +10,20 @@ class UsersController < ApplicationController
   # before_filter :validate_brain_buster, :only => [:create]
 
   def index
-    users_scope = admin? ? :all_users : :users
+    users_scope = if admin?
+                    case params[:status]
+                    when 'active'
+                      :users
+                    when 'suspended'
+                      :suspended_users
+                    when 'pending'
+                      :pending_users
+                    else
+                      :all_users
+                    end
+                  else
+                    :users
+                  end
     if params[:q]
       @q = params[:q].purify
       @users = current_site.send(users_scope).named_like(@q).paginate(:page => current_page)

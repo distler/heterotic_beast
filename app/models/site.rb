@@ -3,6 +3,8 @@ class Site < ActiveRecord::Base
 
   has_many :users, :conditions => {:state => 'active'}
   has_many :all_users, :class_name => 'User'
+  has_many :suspended_users, :class_name => 'User', :conditions => {:state => 'suspended'}
+  has_many :pending_users,   :class_name => 'User', :conditions => {:state => 'pending'}
 
   has_many :forums, :conditions => {:state => 'public'}
   has_many :all_forums, :class_name => 'Forum'

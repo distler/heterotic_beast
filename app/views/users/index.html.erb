@@ -12,6 +12,23 @@
   <%= user_count %>: <%= active_user_count %>, <%= lurking_user_count %>
 </p>
 
+<% if logged_in? && current_user.admin? %>
+
+<%= form_tag({:action => 'index'}, :method => 'get', :remote => true, :id => 'filter_users') do %>
+  <% ['all', 'active', 'suspended', 'pending'].each do |stat| %>
+    <%= radio_button_tag(:status, stat, !!(params['status'] == stat || (!params['status'] && stat == 'all')) ) %>
+    <%= label_tag("status_#{stat}".to_sym, stat) %>
+  <% end %>
+  <%= submit_tag("Filter", :id => 'filter_submit') %>
+<% end %>
+<script type='text/javascript'><!--//--><![CDATA[//><!--
+var form = document.getElementById('filter_users');
+$('filter_submit').remove();
+Event.on(form, 'click', function(event){form.submit();})
+//--><!]]></script>
+
+<% end %>
+
 <div id='users_list'>
   <%= render(:partial => 'users_list') %>
 </div>
