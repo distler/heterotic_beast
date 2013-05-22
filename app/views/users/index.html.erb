@@ -17,7 +17,7 @@
 <%= form_tag({:action => 'index'}, :method => 'get', :remote => true, :id => 'filter_users') do %>
   <% ['all', 'active', 'suspended', 'pending'].each do |stat| %>
     <%= radio_button_tag(:status, stat, !!(params['status'] == stat || (!params['status'] && stat == 'all')) ) %>
-    <%= label_tag("status_#{stat}".to_sym, stat) %>
+    <%= label_tag("status_#{stat}".to_sym, I18n.t("txt.views_users.#{stat}", :default => stat) ) %>
   <% end %>
   <%= submit_tag("Filter", :id => 'filter_submit') %>
 <% end %>

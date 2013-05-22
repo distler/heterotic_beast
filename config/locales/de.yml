@@ -252,6 +252,11 @@
       admin_in_parens: "(Administrator)"
       search_title: suchen
 
+      all: alle
+      active: aktive
+      suspended: gesperrt
+      pending: anhängig
+
       avatars_title: Avatar
       gravatar_notice: Damit Ihr eigener Avatar angezeigt wird, melden Sie sich bitte kostenlos bei %{gravatar} an und hinterlegen Sie dort Ihren ganz persönlichen Avatar.
       settings: Einstellungen
