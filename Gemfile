@@ -17,7 +17,7 @@ gem 'permalink_fu'
 gem 'nokogiri'
 gem 'syntax', :git => 'http://github.com/distler/syntax.git'
 gem "maruku", :git => 'http://github.com/distler/maruku.git', :branch => 'nokogiri'
-gem "auto_migrations", :git => 'https://github.com/yzhang/auto_migrations.git'
+gem "auto_migrations", :git => 'https://github.com/yzhang/auto_migrations_rails4.git', :ref => '6a68f95'
 gem 'rake'
 
 group :development, :test do
