@@ -2,6 +2,7 @@ source "http://rubygems.org"
 
 gem 'rails', '3.1.12'
 gem 'ruby-openid', '>= 2.0.4', :require => "openid"
+gem 'rack', '~>1.5.0'
 gem 'rack-openid'
 gem 'open_id_authentication'
 gem 'will_paginate', "~> 3.0"
