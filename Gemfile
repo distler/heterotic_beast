@@ -5,7 +5,7 @@ gem 'ruby-openid', '>= 2.0.4', :require => "openid"
 gem 'rack-openid'
 gem 'open_id_authentication'
 gem 'will_paginate', "~> 3.0"
-gem "itextomml", ">=1.4.11"
+gem "itextomml", ">=1.5.0"
 gem "mongrel", ">=1.2.0.pre2"
 gem "prototype-rails", "~> 3.1.0"
 gem 'sass-rails', "=3.1.4"

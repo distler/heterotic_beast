@@ -261,8 +261,18 @@ function selectRange(elt, start, end) {
  } 
 }
 
+function retrieveTexSource() {
+	$$('math').each( function(math){Event.observe(math, 'dblclick', grabTex);} );
+	function grabTex(event){
+		var tex = this.firstElementChild.lastElementChild.textContent;
+		var win= window.open('','TeX','scrollbars,resizable,width=500,location=no,toolbar=no,titlebar=no,menubar=no,personalbar=no');
+		win.document.documentElement.lastElementChild.textContent = tex;
+		win.focus();
+	}
+}
 window.onload = function (){
         fixRunIn();
         mactionWorkarounds();
+        retrieveTexSource();
         if ( $('monitor_submit') ) $('monitor_submit').hide();
 };
