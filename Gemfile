@@ -15,9 +15,9 @@ gem 'acts_as_list'
 gem 'acts_as_state_machine'
 gem 'permalink_fu'
 gem 'nokogiri'
-gem 'syntax', :git => 'http://github.com/distler/syntax.git'
-gem "maruku", :git => 'http://github.com/distler/maruku.git', :branch => 'nokogiri'
-gem "auto_migrations", :git => 'https://github.com/yzhang/auto_migrations_rails4.git', :ref => '6a68f95'
+gem 'syntax', :git => 'git://github.com/distler/syntax.git'
+gem "maruku", :git => 'git://github.com/distler/maruku.git', :branch => 'nokogiri'
+gem "auto_migrations", :git => 'git://github.com/yzhang/auto_migrations_rails4.git', :ref => '6a68f95'
 gem 'rake'
 
 group :development, :test do
