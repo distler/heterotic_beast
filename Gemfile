@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem 'rails', '3.1.12'
+gem 'rails', '3.2.16'
 gem 'ruby-openid', '>= 2.0.4', :require => "openid"
 gem 'rack-openid'
 gem 'open_id_authentication'
@@ -8,11 +8,11 @@ gem 'will_paginate', "~> 3.0"
 gem "itextomml", ">=1.5.0"
 gem "mongrel", ">=1.2.0.pre2"
 gem "prototype-rails", "~> 3.1.0"
-gem 'sass-rails', "=3.1.4"
+gem 'sass-rails', "3.2.6"
 gem 'uglifier'
 
 gem 'acts_as_list'
-gem 'acts_as_state_machine'
+gem "tastebook-acts_as_state_machine", "~> 3.0.3", :require => 'acts_as_state_machine'
 gem 'permalink_fu'
 gem 'nokogiri'
 gem "syntax", "~> 1.1.0"

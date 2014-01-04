@@ -1,4 +1,6 @@
+require 'acts_as_state_machine'
 class ActiveRecord::Base
+  include ScottBarron::Acts::StateMachine
   @@white_list_sanitizer = HTML::WhiteListSanitizer.new
   class << self
     attr_accessor :formatted_attributes
