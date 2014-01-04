@@ -7,7 +7,7 @@ gem 'open_id_authentication'
 gem 'will_paginate', "~> 3.0"
 gem "itextomml", ">=1.5.0"
 gem "mongrel", ">=1.2.0.pre2"
-gem "prototype-rails", "~> 3.1.0"
+gem "prototype-rails", "~> 3.2.1"
 gem 'sass-rails', "3.2.6"
 gem 'uglifier'
 
