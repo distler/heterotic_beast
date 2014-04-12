@@ -12,7 +12,7 @@ gem 'sass-rails', "3.2.6"
 gem 'uglifier'
 
 gem 'acts_as_list'
-gem "tastebook-acts_as_state_machine", "~> 3.0.3", :require => 'acts_as_state_machine'
+gem 'acts_as_state_machine', :git => 'git://github.com/ilabsolutions/acts_as_state_machine.git', :ref => '665633d0db'
 gem 'permalink_fu'
 gem 'nokogiri'
 gem "syntax", "~> 1.1.0"

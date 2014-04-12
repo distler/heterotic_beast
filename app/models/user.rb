@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   belongs_to :site, :counter_cache => true
   validates_presence_of :site_id
 
-  has_many :posts, :order => "#{Post.table_name}.created_at desc"
+  has_many :posts, :order => "#{Post.table_name}.created_at desc", :dependent => :delete_all
   has_many :topics, :order => "#{Topic.table_name}.created_at desc"
 
   has_many :moderatorships, :dependent => :delete_all
