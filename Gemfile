@@ -1,12 +1,12 @@
 source "http://rubygems.org"
 
-gem 'rails', '3.2.17'
+gem 'rails', '3.2.18'
 gem 'ruby-openid', '>= 2.0.4', :require => "openid"
 gem 'rack-openid'
 gem 'open_id_authentication'
 gem 'will_paginate', "~> 3.0"
 gem "itextomml", ">=1.5.1"
-gem "mongrel", ">=1.2.0.pre2"
+gem 'thin'
 gem "prototype-rails", "~> 3.2.1"
 gem 'sass-rails', "3.2.6"
 gem 'uglifier'
