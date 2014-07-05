@@ -1,3 +1,5 @@
+/*globals $, svgedit, unescape, DOMParser, ActiveXObject, getStrokedBBox*/
+/*jslint vars: true, eqeq: true, bitwise: true, continue: true, forin: true*/
 /**
  * Package: svgedit.utilities
  *
@@ -13,7 +15,7 @@
 // 3) svgtransformlist.js
 // 4) units.js
 
-(function() {
+(function(undef) {'use strict';
 
 if (!svgedit.utilities) {
 	svgedit.utilities = {};
@@ -53,7 +55,9 @@ svgedit.utilities.init = function(editorContext) {
 // Returns:
 // The converted string
 svgedit.utilities.toXml = function(str) {
-	return $('<p/>').text(str).html();
+	// &apos; is ok in XML, but not HTML
+	// &gt; does not normally need escaping, though it can if within a CDATA expression (and preceded by "]]")
+	return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/, '&#x27;');
 };
 
 // Function: svgedit.utilities.fromXml
@@ -74,16 +78,19 @@ svgedit.utilities.fromXml = function(str) {
 // Base64 code from Tyler Akins -- http://rumkin.com
 
 // schiller: Removed string concatenation in favour of Array.join() optimization,
-//           also precalculate the size of the array needed.
+//				also precalculate the size of the array needed.
 
 // Function: svgedit.utilities.encode64
 // Converts a string to base64
 svgedit.utilities.encode64 = function(input) {
 	// base64 strings are 4/3 larger than the original string
-//	input = svgedit.utilities.encodeUTF8(input); // convert non-ASCII characters
-	input = svgedit.utilities.convertToXMLReferences(input);
-	if(window.btoa) return window.btoa(input); // Use native if available
-	var output = new Array( Math.floor( (input.length + 2) / 3 ) * 4 );
+	input = svgedit.utilities.encodeUTF8(input); // convert non-ASCII characters
+	// input = svgedit.utilities.convertToXMLReferences(input);
+	if (window.btoa) {
+		return window.btoa(input); // Use native if available
+    }
+    var output = [];
+	output.length = Math.floor( (input.length + 2) / 3 ) * 4;
 	var chr1, chr2, chr3;
 	var enc1, enc2, enc3, enc4;
 	var i = 0, p = 0;
@@ -116,7 +123,9 @@ svgedit.utilities.encode64 = function(input) {
 // Function: svgedit.utilities.decode64
 // Converts a string from base64
 svgedit.utilities.decode64 = function(input) {
-	if(window.atob) return window.atob(input);
+	if(window.atob) {
+        return svgedit.utilities.decodeUTF8(window.atob(input));
+    }
 	var output = '';
 	var chr1, chr2, chr3 = '';
 	var enc1, enc2, enc3, enc4 = '';
@@ -148,38 +157,24 @@ svgedit.utilities.decode64 = function(input) {
 		enc1 = enc2 = enc3 = enc4 = '';
 
 	} while (i < input.length);
-	return unescape(output);
+    return svgedit.utilities.decodeUTF8(output);
 };
 
-// Currently not being used, so commented out for now
-// based on http://phpjs.org/functions/utf8_encode:577
-// codedread:does not seem to work with webkit-based browsers on OSX
-// 		'encodeUTF8': function(input) {
-// 			//return unescape(encodeURIComponent(input)); //may or may not work
-// 			var output = '';
-// 			for (var n = 0; n < input.length; n++){
-// 				var c = input.charCodeAt(n);
-// 				if (c < 128) {
-// 					output += input[n];
-// 				}
-// 				else if (c > 127) {
-// 					if (c < 2048){
-// 						output += String.fromCharCode((c >> 6) | 192);
-// 					}
-// 					else {
-// 						output += String.fromCharCode((c >> 12) | 224) + String.fromCharCode((c >> 6) & 63 | 128);
-// 					}
-// 					output += String.fromCharCode((c & 63) | 128);
-// 				}
-// 			}
-// 			return output;
-// 		},
+svgedit.utilities.decodeUTF8 = function (argString) {
+    return decodeURIComponent(escape(argString));
+};
+
+// codedread:does not seem to work with webkit-based browsers on OSX // Brettz9: please test again as function upgraded
+svgedit.utilities.encodeUTF8 = function (argString) {
+  return unescape(encodeURIComponent(argString));
+};
 
 // Function: svgedit.utilities.convertToXMLReferences
 // Converts a string to use XML references
 svgedit.utilities.convertToXMLReferences = function(input) {
-	var output = '';
-	for (var n = 0; n < input.length; n++){
+	var n,
+		output = '';
+	for (n = 0; n < input.length; n++){
 		var c = input.charCodeAt(n);
 		if (c < 128) {
 			output += input[n];
@@ -198,18 +193,22 @@ svgedit.utilities.text2xml = function(sXML) {
 		sXML = sXML.replace(/<(\/?)svg:/g, '<$1').replace('xmlns:svg', 'xmlns');
 	}
 
-	var out;
+	var out, dXML;
 	try{
-		var dXML = (window.DOMParser)?new DOMParser():new ActiveXObject('Microsoft.XMLDOM');
+		dXML = (window.DOMParser)?new DOMParser():new ActiveXObject('Microsoft.XMLDOM');
 		dXML.async = false;
 	} catch(e){
 		throw new Error('XML Parser could not be instantiated');
 	}
 	try{
-		if(dXML.loadXML) out = (dXML.loadXML(sXML)) ? dXML : false;
-		else out = dXML.parseFromString(sXML, 'text/xml');
+		if (dXML.loadXML) {
+			out = (dXML.loadXML(sXML)) ? dXML : false;
+		}
+		else {
+			out = dXML.parseFromString(sXML, 'text/xml');
+		}
 	}
-	catch(e){ throw new Error('Error parsing XML string'); }
+	catch(e2){ throw new Error('Error parsing XML string'); }
 	return out;
 };
 
@@ -282,10 +281,10 @@ svgedit.utilities.getUrlFromAttr = function(attrVal) {
 			return attrVal.substring(5, attrVal.indexOf('"',6));
 		}
 		// url('#somegrad')
-		else if (attrVal.indexOf("url('") === 0) {
+		if (attrVal.indexOf("url('") === 0) {
 			return attrVal.substring(5, attrVal.indexOf("'",6));
 		}
-		else if (attrVal.indexOf("url(") === 0) {
+		if (attrVal.indexOf("url(") === 0) {
 			return attrVal.substring(4, attrVal.indexOf(')'));
 		}
 	}
@@ -345,21 +344,23 @@ svgedit.utilities.getPathBBox = function(path) {
 	var start = seglist.getItem(0);
 	var P0 = [start.x, start.y];
 
-	for(var i=0; i < tot; i++) {
+	var i;
+	for (i = 0; i < tot; i++) {
 		var seg = seglist.getItem(i);
 
-		if(typeof seg.x == 'undefined') continue;
+		if(seg.x === undef) {continue;}
 
 		// Add actual points to limits
 		bounds[0].push(P0[0]);
 		bounds[1].push(P0[1]);
 
-		if(seg.x1) {
+		if (seg.x1) {
 			var P1 = [seg.x1, seg.y1],
 				P2 = [seg.x2, seg.y2],
 				P3 = [seg.x, seg.y];
 
-			for(var j=0; j < 2; j++) {
+			var j;
+			for (j = 0; j < 2; j++) {
 
 				var calc = function(t) {
 					return Math.pow(1-t,3) * P0[j]
@@ -372,22 +373,22 @@ svgedit.utilities.getPathBBox = function(path) {
 				var a = -3 * P0[j] + 9 * P1[j] - 9 * P2[j] + 3 * P3[j];
 				var c = 3 * P1[j] - 3 * P0[j];
 
-				if(a == 0) {
-					if(b == 0) {
+				if (a == 0) {
+					if (b == 0) {
 						continue;
 					}
 					var t = -c / b;
-					if(0 < t && t < 1) {
+					if (0 < t && t < 1) {
 						bounds[j].push(calc(t));
 					}
 					continue;
 				}
 				var b2ac = Math.pow(b,2) - 4 * c * a;
-				if(b2ac < 0) continue;
+				if (b2ac < 0) {continue;}
 				var t1 = (-b + Math.sqrt(b2ac))/(2 * a);
-				if(0 < t1 && t1 < 1) bounds[j].push(calc(t1));
+				if (0 < t1 && t1 < 1) {bounds[j].push(calc(t1));}
 				var t2 = (-b - Math.sqrt(b2ac))/(2 * a);
-				if(0 < t2 && t2 < 1) bounds[j].push(calc(t2));
+				if (0 < t2 && t2 < 1) {bounds[j].push(calc(t2));}
 			}
 			P0 = P3;
 		} else {
@@ -422,10 +423,10 @@ function groupBBFix(selected) {
 	}
 	var ref = $.data(selected, 'ref');
 	var matched = null;
-	var ret;
+	var ret, copy;
 
 	if(ref) {
-		var copy = $(ref).children().clone().attr('visibility', 'hidden');
+		copy = $(ref).children().clone().attr('visibility', 'hidden');
 		$(svgroot_).append(copy);
 		matched = copy.filter('line, path');
 	} else {
@@ -442,7 +443,7 @@ function groupBBFix(selected) {
 		});
 		if(issue) {
 			var elems = ref ? copy : $(selected).children();
-			ret = getStrokedBBox(elems);
+			ret = getStrokedBBox(elems); // getStrokedBBox defined in svgcanvas
 		} else {
 			ret = selected.getBBox();
 		}
@@ -463,7 +464,7 @@ function groupBBFix(selected) {
 // elem - Optional DOM element to get the BBox for
 svgedit.utilities.getBBox = function(elem) {
 	var selected = elem || editorContext_.geSelectedElements()[0];
-	if (elem.nodeType != 1) return null;
+	if (elem.nodeType != 1) {return null;}
 	var ret = null;
 	var elname = selected.nodeName;
 
@@ -481,7 +482,7 @@ svgedit.utilities.getBBox = function(elem) {
 		if(!svgedit.browser.supportsPathBBox()) {
 			ret = svgedit.utilities.getPathBBox(selected);
 		} else {
-			try { ret = selected.getBBox();} catch(e){}
+			try { ret = selected.getBBox();} catch(e2){}
 		}
 		break;
 	case 'g':
@@ -494,7 +495,7 @@ svgedit.utilities.getBBox = function(elem) {
 			ret = groupBBFix(selected, true);
 		}
 		if(elname === 'use' || ( elname === 'foreignObject' && svgedit.browser.isWebkit() ) ) {
-			if(!ret) ret = selected.getBBox();
+			if(!ret) {ret = selected.getBBox();}
 			// This is resolved in later versions of webkit, perhaps we should
 			// have a featured detection for correct 'use' behavior?
 			// ——————————
@@ -508,13 +509,13 @@ svgedit.utilities.getBBox = function(elem) {
 			//}
 		} else if(~visElems_arr.indexOf(elname)) {
 			try { ret = selected.getBBox();}
-			catch(e) {
+			catch(e3) {
 				// Check if element is child of a foreignObject
 				var fo = $(selected).closest('foreignObject');
 				if(fo.length) {
 					try {
 						ret = fo[0].getBBox();
-					} catch(e) {
+					} catch(e4) {
 						ret = null;
 					}
 				} else {
@@ -544,9 +545,10 @@ svgedit.utilities.getRotationAngle = function(elem, to_rad) {
 	var selected = elem || editorContext_.getSelectedElements()[0];
 	// find the rotation transform (if any) and set it
 	var tlist = svgedit.transformlist.getTransformList(selected);
-	if(!tlist) return 0; // <svg> elements have no tlist
+	if(!tlist) {return 0;} // <svg> elements have no tlist
 	var N = tlist.numberOfItems;
-	for (var i = 0; i < N; ++i) {
+	var i;
+	for (i = 0; i < N; ++i) {
 		var xform = tlist.getItem(i);
 		if (xform.type == 4) {
 			return to_rad ? xform.angle * Math.PI / 180.0 : xform.angle;
@@ -600,12 +602,13 @@ if (svgedit.browser.supportsSelectors()) {
 // suspendLength - Optional integer of milliseconds to suspend redraw
 // unitCheck - Boolean to indicate the need to use svgedit.units.setUnitAttr
 svgedit.utilities.assignAttributes = function(node, attrs, suspendLength, unitCheck) {
-	if(!suspendLength) suspendLength = 0;
+	if(!suspendLength) {suspendLength = 0;}
 	// Opera has a problem with suspendRedraw() apparently
 	var handle = null;
-	if (!svgedit.browser.isOpera()) svgroot_.suspendRedraw(suspendLength);
+	if (!svgedit.browser.isOpera()) {svgroot_.suspendRedraw(suspendLength);}
 
-	for (var i in attrs) {
+	var i;
+	for (i in attrs) {
 		var ns = (i.substr(0,4) === 'xml:' ? NS.XML :
 			i.substr(0,6) === 'xlink:' ? NS.XLINK : null);
 
@@ -617,7 +620,7 @@ svgedit.utilities.assignAttributes = function(node, attrs, suspendLength, unitCh
 			svgedit.units.setUnitAttr(node, i, attrs[i]);
 		}
 	}
-	if (!svgedit.browser.isOpera()) svgroot_.unsuspendRedraw(handle);
+	if (!svgedit.browser.isOpera()) {svgroot_.unsuspendRedraw(handle);}
 };
 
 // Function: cleanupElement
@@ -641,7 +644,8 @@ svgedit.utilities.cleanupElement = function(element) {
 		'ry':0
 	};
 
-	for(var attr in defaults) {
+	var attr;
+	for (attr in defaults) {
 		var val = defaults[attr];
 		if(element.getAttribute(attr) == val) {
 			element.removeAttribute(attr);
@@ -664,4 +668,47 @@ svgedit.utilities.snapToGrid = function(value) {
 	return value;
 };
 
-})();
+svgedit.utilities.preg_quote = function (str, delimiter) {
+  // From: http://phpjs.org/functions
+  return String(str).replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + (delimiter || '') + '-]', 'g'), '\\$&');
+};
+
+/**
+* @param {string} globalCheck A global which can be used to determine if the script is already loaded
+* @param {array} scripts An array of scripts to preload (in order)
+* @param {function} cb The callback to execute upon load.
+*/
+svgedit.utilities.executeAfterLoads = function (globalCheck, scripts, cb) {
+	return function () {
+		var args = arguments;
+		function endCallback () {
+			cb.apply(null, args);
+		}
+		if (window[globalCheck]) {
+			endCallback();
+		}
+		else {
+			scripts.reduceRight(function (oldFunc, script) {
+				return function () {
+					$.getScript(script, oldFunc);
+				};
+			}, endCallback)();
+		}
+	};
+};
+
+svgedit.utilities.buildCanvgCallback = function (callCanvg) {
+	return svgedit.utilities.executeAfterLoads('canvg', ['canvg/rgbcolor.js', 'canvg/canvg.js'], callCanvg);
+};
+
+svgedit.utilities.buildJSPDFCallback = function (callJSPDF) {
+	return svgedit.utilities.executeAfterLoads('RGBColor', ['canvg/rgbcolor.js'], function () {
+		var arr = [];
+		if (!RGBColor || RGBColor.ok === undef) { // It's not our RGBColor, so we'll need to load it
+			arr.push('canvg/rgbcolor.js');
+		}
+		svgedit.utilities.executeAfterLoads('jsPDF', arr.concat('jspdf/underscore-min.js', 'jspdf/jspdf.min.js', 'jspdf/jspdf.plugin.svgToPdf.js'), callJSPDF)();
+	});
+};
+
+}());
