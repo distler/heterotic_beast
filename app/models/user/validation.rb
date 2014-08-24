@@ -3,7 +3,7 @@ class User
   # Virtual attribute for the unencrypted password
   attr_accessor :password
 
-  before_validation :normalize_email
+  before_validation :normalize_login_and_email
   validates_presence_of     :login, :email
   validates_presence_of     :password,                   :if => :password_required?
   validates_presence_of     :password_confirmation,      :if => :password_required?
@@ -59,8 +59,9 @@ class User
       self.admin = true if site && site.users.size.zero?
     end
 
-    def normalize_email
-      email.downcase! if email
+    def normalize_login_and_email
+      login.strip! if login
+      email.downcase! && email.strip! if email
       return true
     end
 end
