@@ -1,6 +1,7 @@
 source "http://rubygems.org"
 
-gem 'rails', '3.2.18'
+gem "rack", "~> 1.4.5"
+gem 'rails', '3.2.21'
 gem 'ruby-openid', '>= 2.0.4', :require => "openid"
 gem 'rack-openid'
 gem 'open_id_authentication'
