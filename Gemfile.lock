@@ -9,6 +9,13 @@ GIT
       syntax (~> 1.1.0)
 
 GIT
+  remote: git://github.com/distler/will_paginate.git
+  revision: b9623752d08f5437db44ec781630f43b1edb3cb0
+  branch: master
+  specs:
+    will_paginate (3.0.4)
+
+GIT
   remote: git://github.com/ilabsolutions/acts_as_state_machine.git
   revision: 665633d0db4aa05ce5d4033adfa4b7332d4a48a1
   ref: 665633d0db
@@ -165,7 +172,6 @@ GEM
     uglifier (2.5.3)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
-    will_paginate (3.0.7)
 
 PLATFORMS
   ruby
@@ -195,4 +201,4 @@ DEPENDENCIES
   syntax (~> 1.1.0)
   thin
   uglifier
-  will_paginate (~> 3.0)
+  will_paginate!
