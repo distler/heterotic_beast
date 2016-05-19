@@ -44,10 +44,10 @@ if (history && history.replaceState && $$('.pagination')) {
       <%= p = Hash.new
        p.update('page' => params[:page].to_i) if params[:page]
        p.update('monitored' => 'true') if @monitored
-       p.update('utf8' => params[:utf8]) if params[:utf8]
-       p.update('q' => @q) if @q
+       p.update('utf8' => CGI.escape(params[:utf8])) if params[:utf8]
+       p.update('q' => CGI.escape(@q)) if @q
        p.update('user_id' => params[:user_id].to_i) if params[:user_id]
-       p.update('topic_id' => params[:topic_id]) if params[:topic_id]
+       p.update('topic_id' => params[:topic_id].to_i) if params[:topic_id]
        modify_history('pushState', 'Posts', posts_path, p) %>
     });
   $$('.pagination a').invoke('writeAttribute','data-remote')
