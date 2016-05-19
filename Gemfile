@@ -1,10 +1,11 @@
 source "http://rubygems.org"
 
-gem 'rails', '3.2.18'
+gem "rack", "~> 1.4.5"
+gem 'rails', '3.2.21'
 gem 'ruby-openid', '>= 2.0.4', :require => "openid"
 gem 'rack-openid'
 gem 'open_id_authentication'
-gem 'will_paginate', "~> 3.0"
+gem 'will_paginate', :git => 'git://github.com/distler/will_paginate.git', :branch => 'master'
 gem "itextomml", ">=1.5.1"
 gem 'thin'
 gem "prototype-rails", "~> 3.2.1"

@@ -11,7 +11,8 @@ class User
   validates_confirmation_of :password,                   :if => :password_required?
   validates_length_of       :login,    :within => 3..40
   validates_length_of       :email,    :within => 3..100
-  validates_uniqueness_of   :login, :email, :scope => :site_id
+  validates_uniqueness_of   :email, :scope => :site_id
+  validates_uniqueness_of   :login, :case_sensitive => false, :scope => :site_id
   before_save :encrypt_password
   before_create :set_first_user_as_admin
   # validates_email_format_of :email, :message=>"is invalid"
@@ -59,8 +60,8 @@ class User
     end
 
     def normalize_login_and_email
-      login.downcase! && login.strip! if login
-      email.downcase! if email
+      login.strip! if login
+      email.downcase! && email.strip! if email
       return true
     end
 end
