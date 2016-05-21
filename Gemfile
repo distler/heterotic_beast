@@ -1,7 +1,8 @@
 source "http://rubygems.org"
 
-gem "rack", "~> 1.4.5"
-gem 'rails', '3.2.21'
+gem "rack", "= 1.4.5"
+gem 'rails', '3.2.22.2'
+gem 'test-unit'
 gem 'ruby-openid', '>= 2.0.4', :require => "openid"
 gem 'rack-openid'
 gem 'open_id_authentication'
@@ -31,5 +32,9 @@ group :development, :test do
 end
 
 group :production do
-  gem 'mysql2',  :git => 'http://github.com/brianmario/mysql2.git'
+  gem 'mysql2', '~> 0.3.19' 
+end
+
+group :assets do
+  gem 'turbo-sprockets-rails3'
 end
