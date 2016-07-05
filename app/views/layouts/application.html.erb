@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title><%= current_site && current_site.name || I18n.t('txt.beast_title', :default => 'Altered Beast') %><%= " - " + @page_title if @page_title %></title>
     <%= favicon_link_tag %>
     <%= stylesheet_link_tag 'application' %>
@@ -36,7 +37,7 @@
     <link rel="search" type="application/opensearchdescription+xml" href="http://<%= request.host_with_port %>/open_search.xml" />
     <%= csrf_meta_tag %>
   </head>
-  <body>
+  <body xmlns:se='http://svg-edit.googlecode.com' xmlns:xlink='http://www.w3.org/1999/xlink'>
     <div id="header">
       <%= render "layouts/head" %>
     </div>
