@@ -5,7 +5,7 @@
 <%= will_paginate topics %>
 <% end %>
 
-<table border="0" cellspacing="0" cellpadding="0" class="wide topics">
+<table class="wide topics">
 <tr>
   <th class="la" colspan="2"><%= I18n.t 'txt.topics', :default => 'Topics' %>
   <% if logged_in? %>
@@ -17,8 +17,8 @@
   <% end %>
   </th>
   <th class="ca"><%= I18n.t 'txt.started', :default => 'Started by' %></th>
-  <th width="1%"><%= I18n.t 'txt.posts', :default => 'Posts' %></th>
-  <th width="1%"><%= I18n.t 'txt.views', :default => 'Views' %></th>
+  <th style="width: 1%"><%= I18n.t 'txt.posts', :default => 'Posts' %></th>
+  <th style="width: 1%"><%= I18n.t 'txt.views', :default => 'Views' %></th>
   <th class="la"><%= I18n.t 'txt.latest_post', :default => 'Latest post' %></th>
 </tr>
 <% for topic in topics %>

@@ -1,6 +1,10 @@
 AlteredBeast::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
+  ####
+  # This rotates the log file, keeping 25 files, of 1MB each.
+  config.action_controller.logger = Logger.new(Rails.root.join('log', "#{Rails.env}.log"), 25, 1024000)
+
   # The production environment is meant for finished, "live" apps.
   # Code is not reloaded between requests
   config.cache_classes = true
@@ -12,6 +16,9 @@ AlteredBeast::Application.configure do
   config.assets.compile = true
   # Generate digests for assets URLs
   config.assets.digest = true
+  # Adjust the prefix for precompiled assets
+  #config.assets.prefix = "#{ENV['RAILS_RELATIVE_URL_ROOT']}/assets"
+  #config.assets.manifest = "#{ENV['RAILS_RELATIVE_URL_ROOT']}/assets"
 
   # Full error reports are disabled and caching is turned on
   config.consider_all_requests_local       = false
@@ -22,6 +29,9 @@ AlteredBeast::Application.configure do
 
   # For nginx:
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect'
+
+  # stupidity
+  config.action_dispatch.best_standards_support = :builtin
 
   # If you have no front-end server that supports something like X-Sendfile,
   # just comment this out and Rails will serve the files
@@ -51,6 +61,7 @@ AlteredBeast::Application.configure do
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found)
   config.i18n.fallbacks = true
+  config.i18n.enforce_available_locales = false
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify

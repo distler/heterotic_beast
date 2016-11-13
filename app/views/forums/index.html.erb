@@ -20,10 +20,10 @@
 <%= I18n.t 'txt.count_posts',  :count => current_site.posts.size,  :num => number_with_delimiter(current_site.posts.size) %>
 </p>
 
-<table border="0" cellspacing="0" cellpadding="0" class="wide forums">
+<table class="wide forums">
   <tr>
-    <th class="la" width="70%" colspan="3"><%= I18n.t 'txt.forum', :default => 'Forum' %></th>
-    <th class="la" width="30%" colspan="1"><%= I18n.t 'txt.latest_post', :default => 'Last Post' %></th>
+    <th class="la" style="width: 70%" colspan="3"><%= I18n.t 'txt.forum', :default => 'Forum' %></th>
+    <th class="la" style="width: 30%" colspan="1"><%= I18n.t 'txt.latest_post', :default => 'Last Post' %></th>
   </tr>
 <% for forum in @forums do %>  
   <tr class="forum" id="forum_<%= forum.id %>_row">
@@ -41,7 +41,7 @@
         <%= I18n.t 'txt.count_topics', :count => forum.topics.size, :num => number_with_delimiter(forum.topics.size) %>,
         <%= I18n.t 'txt.count_posts', :count => forum.posts.size, :num => number_with_delimiter(forum.posts.size) %>
       </div>
-      <p class="desc"><%= forum.description_html.html_safe %></p>
+      <%= forum.description_html.html_safe %>
     </td>
     <td class="c3">
       <%= link_to I18n.t('txt.edit', :default => 'Edit'), edit_forum_path(forum), :class => "tiny", :rel => "directory", :style => "float:right" if admin? %>

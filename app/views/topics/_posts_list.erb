@@ -1,12 +1,12 @@
-<a name="<%= dom_id @posts.first %>" id="<%= dom_id @posts.first %>">&#xA0;</a>
+<a id="<%= dom_id @posts.first %>">&#xA0;</a>
 
 <%= will_paginate @posts %>
-<table border="0" cellspacing="0" cellpadding="0" class="posts wide">
+<table class="posts wide">
 <% for post in @posts do %>
 <% unless post == @posts.first %>
 <tr class="spacer">
   <td colspan="2">
-    <a name="<%= dom_id post %>" id="<%= dom_id post %>">&#xA0;</a>
+    <a id="<%= dom_id post %>">&#xA0;</a>
   </td>
 </tr>
 <% end %>

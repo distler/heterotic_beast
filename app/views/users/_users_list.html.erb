@@ -1,13 +1,13 @@
 <%= will_paginate @users %>
 
-<table border="0" cellspacing="0" cellpadding="0" class="wide forums">
+<table class="wide forums">
   <tr>
-    <th class="la" width="88%"><%= I18n.t 'txt.views_users.name_or_login', :default => 'Name / Login' %></th>
+    <th class="la" style="width: 88%"><%= I18n.t 'txt.views_users.name_or_login', :default => 'Name / Login' %></th>
 	<% if logged_in? && current_user.admin? %>
 	<th><%= I18n.t 'txt.views_users.current_status_title', :default => "Current Status" %></th>
 	<% end %>
     <th><%= I18n.t 'txt.views_users.website_title', :default => 'Website' %></th>
-    <th width="1%"><%= I18n.t 'txt.views_users.posts_title', :default => 'Posts' %></th>
+    <th style="width: 1%"><%= I18n.t 'txt.views_users.posts_title', :default => 'Posts' %></th>
   </tr>
 <% @users.each do |user|%>  
   <tr>
