@@ -1,4 +1,4 @@
-require 'instiki_stringsupport'
+require 'itex_stringsupport'
 require 'maruku'
 require 'maruku/ext/math'
 require 'sanitizer'

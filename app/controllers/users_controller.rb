@@ -1,4 +1,4 @@
-require 'instiki_stringsupport'
+require 'itex_stringsupport'
 
 class UsersController < ApplicationController
   before_filter :admin_required, :only => [:suspend, :unsuspend, :destroy, :purge, :edit]
@@ -51,7 +51,7 @@ class UsersController < ApplicationController
              # current_site.users.build(User.where(:email => params[:email]).first.login)    
              User.where(:email => params[:email].purify).first
     @user.save if @user.valid?
-    @user.register! if @user.valid?
+    @user.register if @user.valid?
     unless @user.new_record?
       redirect_back_or_default(:login)
       flash[:notice] = I18n.t 'txt.activation_required', 
