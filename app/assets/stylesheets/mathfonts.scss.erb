@@ -1,0 +1,48 @@
+/*
+The STIX Two fonts are released under the "SIL Open Font License, Version
+1.1". The fonts (both the otf and the woff and woff2 versions used here)
+can be obtained from http://stixfonts.org/ .
+*/
+@font-face {
+    font-family: STIX Two Text;
+    src: local('STIX Two Text'), local('STIX2Text-Regular'),
+         url('<%= font_path("STIX2Text-Regular.woff2") %>'), url('<%= font_path("STIX2Text-Regular.woff") %>');
+}
+@font-face {
+    font-family: STIX Two Text;
+    src: local('STIX Two Text Bold'), local('STIX2Text-Bold'),
+         url('<%= font_path("STIX2Text-Bold.woff2") %>'), url('<%= font_path("STIX2Text-Bold.woff") %>');
+    font-weight: bold;
+}
+@font-face {
+    font-family: STIX Two Text;
+    src: local('STIX Two Text Italic'), local('STIX2Text-Italic'),
+         url('<%= font_path("STIX2Text-Italic.woff2") %>'), url('<%= font_path("STIX2Text-Italic.woff") %>');
+    font-style: italic;
+}
+@font-face {
+    font-family: STIX Two Text;
+    src: local('STIX Two Text Bold Italic'), local('STIX2Text-BoldItalic'),
+         url('<%= font_path("STIX2Text-BoldItalic.woff2") %>'), url('<%= font_path("STIX2Text-BoldItalic.woff") %>');
+    font-weight: bold;
+    font-style: italic;
+}
+@font-face {
+    font-family: STIX Two Math;
+    src: local('STIX Two Math'), local('STIX2Math'),
+         url('<%= font_path("STIX2Math.woff2") %>'), url('<%= font_path("STIX2Math.woff") %>');
+}
+
+mtext {
+    font-family: STIX Two Text;
+}
+math {
+    font-family: STIX Two Math;
+}
+
+.oldstylenumbers {
+    font-variant-numeric: oldstyle-nums; /* Recommended syntax */
+    font-feature-settings: 'onum';         /* OpenType feature syntax */
+    -moz-font-feature-settings: 'onum';    /* Gecko <= 33 syntax */
+    -webkit-font-feature-settings: 'onum'; /* Blink syntax */
+}

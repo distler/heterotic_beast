@@ -369,7 +369,7 @@ div.upload
 	xbackground:#e7e7e7;
 	padding:7px 0;
 	float:left;
-	xwidth:63%;
+	width:63%;
 	margin-left:0.5em;
 }
 div.upload p label { font-size:0.7em; font-weight:bold;}
@@ -559,6 +559,7 @@ table.nopad td
 
 table
 {
+	border-spacing: 0;
 	border-collapse:collapse;
 	font-family: 'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
 }
@@ -819,6 +820,7 @@ table.posts tr.spacer td
 	border-right:0;
 	overflow:auto;
 	font-family: "Monaco", "Bitstream Vera Sans Mono", "Courier New", serif;
+        max-width: 100%;
 }
 
 .posts .post .body a:hover { color:brown; }
@@ -1089,3 +1091,16 @@ height:1.625em;
 }
 
 .maruku_toc ul { list-style: none; }
+
+@media only screen and (max-device-width: 480px) {
+#right {clear: left;}
+#container {min-width: 0; max-width: 100%}
+#content {margin: 0; padding: 5px; width: 100%; min-width: 0}
+#footer {min-width: 67%; max-width: 67%}
+#footer p.credit {font-size: .5em}
+.topics {max-width: 95%}
+.post .author {width: 5em; max-width: 15%; min-width:10%}
+.posts .post .body {max-width: 90%}
+div.editbox .container {width:95%; min-width: 95%}
+#MarkupHelp {clear: left;}
+}

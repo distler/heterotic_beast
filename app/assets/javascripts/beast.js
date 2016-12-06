@@ -288,9 +288,34 @@ function retrieveTexSource() {
 		win.focus();
 	}
 }
+
+function columnAlignShim() {
+  var mtables = document.querySelectorAll('mtable[columnalign]');
+  for (var i = 0; i < mtables.length; i++) {
+    var mtable = mtables[i];
+    var colAligns = mtable.getAttribute('columnalign').split(/\s+/);
+    if (colAligns.length > 1) {
+      var mtds = mtable.querySelectorAll(':scope > mtr > mtd');
+      for (var j = 0; j < mtds.length; j++) {
+        mtds[j].style.textAlign = colAligns[j];
+      }
+    }
+  }
+}
+
+function minMathWidth() {
+  var maths = document.querySelectorAll('math[display=block]');
+  for (var i = 0; i < maths.length; i++) {
+    var m = maths[i];
+    m.style.minWidth = m.firstElementChild.clientWidth;
+  }
+}
+
 window.onload = function (){
         fixRunIn();
         mactionWorkarounds();
         retrieveTexSource();
+        columnAlignShim();
+        minMathWidth();
         if ( $('monitor_submit') ) $('monitor_submit').hide();
 };
