@@ -40,7 +40,11 @@ math {
     font-family: STIX Two Math;
 }
 
-.mathscript {font-feature-settings: "ss01" on;}
+.mathscript {
+    font-variant-alternates: styleset(1); /* Recommended syntax */
+    font-feature-settings: ss01;          /* E.g. Chrome doesn't support the above */
+}
+
 .oldstylenumbers {
     font-variant-numeric: oldstyle-nums; /* Recommended syntax */
     font-feature-settings: 'onum';         /* OpenType feature syntax */
