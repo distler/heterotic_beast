@@ -13,7 +13,7 @@ svgEditor.addExtension("itex", function(S) {
 		svgcontent = S.svgcontent,
 			addElem = S.addSvgElementFromJson,
 			selElems,
-			ajaxEndpoint = "../../itex",
+			ajaxEndpoint = "../../../itex",
 			editingitex = false,
 			svgdoc = S.svgroot.parentNode.ownerDocument,
 			started,
