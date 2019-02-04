@@ -27,12 +27,12 @@ group :development, :test do
   gem 'highline'
   gem 'sqlite3'
   # gem 'ruby-debug19'
-  gem 'autotest'
+  # gem 'autotest'
   gem 'rails3-generators'
 end
 
 group :production do
-  gem 'mysql2', '~> 0.3.19' 
+  gem 'mysql2', '~> 0.5.2' 
 end
 
 group :assets do

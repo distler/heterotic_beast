@@ -1,0 +1,10 @@
+--- vendor/bundle/ruby/2.6.0/gems/activerecord-3.2.22.2/lib/active_record/connection_adapters/mysql2_adapter.rb.orig	2019-02-03 23:36:11.000000000 -0600
++++ vendor/bundle/ruby/2.6.0/gems/activerecord-3.2.22.2/lib/active_record/connection_adapters/mysql2_adapter.rb	2019-02-03 23:24:38.000000000 -0600
+@@ -1,6 +1,6 @@
+ require 'active_record/connection_adapters/abstract_mysql_adapter'
+
+-gem 'mysql2', '~> 0.3.10'
++gem 'mysql2', '~> 0.5.0'
+ require 'mysql2'
+
+ module ActiveRecord
