@@ -12,6 +12,7 @@ gem 'thin'
 gem "prototype-rails", "~> 3.2.1"
 gem 'sass-rails', "3.2.6"
 gem 'uglifier'
+gem 'httparty'
 
 gem 'acts_as_list'
 gem 'acts_as_state_machine', :git => 'git://github.com/ilabsolutions/acts_as_state_machine.git', :ref => '665633d0db'

@@ -65,4 +65,8 @@ AlteredBeast::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+
+  # URL for Tikz server
+  # Tikz conversion is disabled if you comment this out
+#  ENV['tikz_server'] = 'http://localhost:9292/'
 end
