@@ -2,6 +2,7 @@ require 'itex_stringsupport'
 require 'maruku'
 require 'maruku/ext/math'
 require 'sanitizer'
+require 'httparty'
 
 module HtmlFormatting
   protected
