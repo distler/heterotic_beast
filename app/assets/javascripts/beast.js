@@ -307,10 +307,16 @@ function columnAlignShim() {
 
 function minMathWidth() {
   var maths = document.querySelectorAll('math[display=block]');
-  if (maths[0] && maths[0].style) {
+  if (maths && maths.length > 0) {
     for (var i = 0; i < maths.length; i++) {
       var m = maths[i];
-      m.style.minWidth = m.firstElementChild.clientWidth;
+      // wrap in a div which supports overflow CSS property
+      var wrapper = document.createElement('div');
+      wrapper.style.overflow = 'auto';
+      wrapper.style.padding = '3px 0';
+      m.parentNode.insertBefore(wrapper, m);
+      m.parentNode.removeChild(m);
+      wrapper.appendChild(m);
     }
   }
 }
