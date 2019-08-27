@@ -26,6 +26,7 @@ class Forum < ActiveRecord::Base
   has_many :moderatorships, :dependent => :delete_all
   has_many :moderators, :through => :moderatorships, :source => :user
 
+  scope :public, -> { where(state: 'public') }
   scope :ordered, order(:position)
 
   def to_param
