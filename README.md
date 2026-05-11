@@ -10,7 +10,7 @@ All the features of Altered Beast, plus
 * With an optional install of [tex2svg](https://github.com/distler/tex2svg),
   supports Tikz. See [here](https://golem.ph.utexas.edu/wiki/instiki/show/Tikz)
   for more details.
-* Updated for Rails 7
+* Updated for Rails 8
 
 ## Altered Beast
 
@@ -44,7 +44,17 @@ Check out the code via git:
     Follow the instructions to create your database and load users.
     Configure how you want to deliver the signup emails in config/initializers/mail.rb .
     Start the application with 
-    
+
     $ bundle exec rails server -e production
     
     and visit http://127.0.0.1:3000 to visit your new forum.
+
+    If you're upgrading an existing installation, then you probably don't want to bootstrap
+    again, but you will need to
+
+    $ bundle exec rake app:secret_key_base
+    $ bundle exec rake db:migrate RAILS_ENV=production
+
+    to do the database migration and establish a secret key. Unfortunately, had to switch
+    authentication schemes, so *all* existing users will have to reset their passwords 
+    (using the link on the Login page)
