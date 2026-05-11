@@ -1,6 +1,6 @@
 class ModeratorshipsController < ApplicationController
   def create
-    @moderatorship = Moderatorship.new(params[:moderatorship])
+    @moderatorship = Moderatorship.new(moderatorship_params)
 
     respond_to do |format|
       if @moderatorship.save
@@ -24,4 +24,10 @@ class ModeratorshipsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
+  private
+
+    def moderatorship_params
+      params.fetch(:moderatorship, {}).permit(:user_id, :forum_id)
+    end
 end

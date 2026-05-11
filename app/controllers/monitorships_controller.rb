@@ -1,24 +1,22 @@
 class MonitorshipsController < ApplicationController
-  before_filter :login_required
-
-  cache_sweeper :monitorships_sweeper
+  before_action :login_required
 
   def create
-    @monitorship = Monitorship.find_or_initialize_by_user_id_and_topic_id(current_user.id, params[:topic_id])
-    topic = ActiveRecord::Base::Topic.find(params[:topic_id])
+    @monitorship = Monitorship.find_or_initialize_by(user_id: current_user.id, topic_id: params[:topic_id])
+    topic = Topic.find(params[:topic_id])
     @monitorship.update_attribute :active, true
-    respond_to do |format| 
+    respond_to do |format|
       format.html { redirect_to forum_topic_path(params[:forum_id], topic) }
-      format.js
+      format.js   { head :ok }
     end
   end
 
   def destroy
     Monitorship.where(:user_id => current_user.id, :topic_id => params[:topic_id]).update_all(:active => false)
-    topic = ActiveRecord::Base::Topic.find(params[:topic_id])
-    respond_to do |format| 
+    topic = Topic.find(params[:topic_id])
+    respond_to do |format|
       format.html { redirect_to forum_topic_path(params[:forum_id], topic) }
-      format.js
+      format.js   { head :ok }
     end
   end
 end

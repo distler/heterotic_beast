@@ -8,7 +8,7 @@ describe ForumsController, "GET #index" do
   before do
     login_as :default
     current_site :default
-    @controller.stub!(:admin_required).and_return(true)
+    @controller.stub(:admin_required).and_return(true)
     session[:forums_page] = {1 => 5}
     @forum_time = session[:forums] = {1 => 5.minutes.ago.utc}
   end
@@ -70,7 +70,7 @@ describe ForumsController, "GET #new" do
   before do
     login_as :default
     current_site :default
-    @controller.stub!(:admin_required).and_return(true)
+    @controller.stub(:admin_required).and_return(true)
   end
 
   it "assigns @forum" do
@@ -96,7 +96,7 @@ describe ForumsController, "GET #edit" do
     login_as :default
     current_site :default
     @forum  = forums(:default) 
-    @controller.stub!(:admin_required).and_return(true)
+    @controller.stub(:admin_required).and_return(true)
   end
 
   it_assigns :forum
@@ -108,7 +108,7 @@ describe ForumsController, "POST #create" do
     @attributes = {'name' => "Default"}
     current_site :default
     login_as :default
-    @controller.stub!(:admin_required).and_return(true)
+    @controller.stub(:admin_required).and_return(true)
   end
   
   describe ForumsController, "(successful creation)" do
@@ -150,7 +150,7 @@ describe ForumsController, "PUT #update" do
     current_site :default
     @attributes = {'name' => "Default"}
     @forum      = forums(:default)
-    @controller.stub!(:admin_required).and_return(true)
+    @controller.stub(:admin_required).and_return(true)
   end
   
   describe ForumsController, "(successful save)" do
@@ -194,7 +194,7 @@ describe ForumsController, "DELETE #destroy" do
     login_as :default
     current_site :default
     @forum      = forums(:default)
-    @controller.stub!(:admin_required).and_return(true)
+    @controller.stub(:admin_required).and_return(true)
   end
 
   it_assigns :forum
@@ -206,5 +206,35 @@ describe ForumsController, "DELETE #destroy" do
 
     it_assigns :forum
     it_renders :blank
+  end
+end
+
+# Regression: the admin path of #index used to be `current_site.all_forums`,
+# which has no default ordering. With modern `acts_as_list` (no implicit
+# default_scope :order => 'position'), admins saw forums in DB insertion
+# order, ignoring the configured `position`. Pin both index branches.
+describe ForumsController, "GET #index orders by position" do
+  before do
+    # Forge an unsorted insertion order: id-ascending, but reverse-positioned.
+    site = sites(:default)
+    @first  = site.all_forums.create!(:name => 'Zeta',  :description => 'last')
+    @second = site.all_forums.create!(:name => 'Alpha', :description => 'first')
+    @first.update_column(:position, 2)
+    @second.update_column(:position, 1)
+  end
+
+  it "orders by position for admins (was the broken path)" do
+    login_as :admin
+    get :index
+    forums = assigns(:forums)
+    pair   = forums.to_a.select { |f| [@first.id, @second.id].include?(f.id) }
+    expect(pair.map(&:id)).to eq([@second.id, @first.id])
+  end
+
+  it "orders by position for ordinary users" do
+    get :index
+    forums = assigns(:forums)
+    pair   = forums.to_a.select { |f| [@first.id, @second.id].include?(f.id) }
+    expect(pair.map(&:id)).to eq([@second.id, @first.id])
   end
 end

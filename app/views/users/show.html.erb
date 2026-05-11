@@ -49,7 +49,8 @@
 <p class="subtitle">
   <%= feed_icon_tag @user.display_name, user_posts_path(:user_id => @user, :format => :rss) %>
   <span>
-    <%= I18n.t 'txt.count_topics', :count => @user.topics.size, :num => number_with_delimiter(@user.topics.size) %>,
+    <% topics_n = @user.posts.select(:topic_id).distinct.count %>
+    <%= I18n.t 'txt.count_topics', :count => topics_n, :num => number_with_delimiter(topics_n) %>,
     <%= I18n.t 'txt.count_posts', :count => @user.posts.size, :num => number_with_delimiter(@user.posts.size) %>
     (<%= I18n.t 'txt.view', :default => 'view' %>
      <%= link_to I18n.t('txt.all', :default => 'all'), user_posts_path(@user) %> <% if logged_in? %>|
@@ -62,5 +63,5 @@
 <% unless @user.website.blank? %>
 <p><strong><%= I18n.t 'txt.website', :default => 'Website' %></strong> <%= sanitize link_to(@user.website.gsub("http://",""), "http://" + @user.website.gsub("http://","")) %></p>
 <% end %>
-<p><%= I18n.t 'txt.user_since', :default => 'User since %{date}', :date => @user.created_at.to_date.to_s(:long) %></p>
+<p><%= I18n.t 'txt.user_since', :default => 'User since %{date}', :date => @user.created_at.to_date.to_fs(:long) %></p>
 

@@ -1,4 +1,4 @@
-class Post < ActiveRecord::Base
+class Post < ApplicationRecord
   include User::Editable
 
   formats_attributes :body
@@ -21,30 +21,29 @@ class Post < ActiveRecord::Base
   after_update  :update_cached_fields
   after_destroy :update_cached_fields
 
-  attr_accessible :body, :topic_id
 
   def self.search(query, options = {})
-    # had to change the other join string since it conflicts when we bring parents in
-    options[:conditions] ||= ["LOWER(#{Post.table_name}.body) LIKE ?", "%#{query}%"] unless query.blank?
-    options[:select]     ||= "#{Post.table_name}.*, #{Topic.table_name}.title as topic_title, f.name as forum_name"
-    options[:joins]      ||= "inner join #{Topic.table_name} on #{Post.table_name}.topic_id = #{Topic.table_name}.id " + 
-                             "inner join #{Forum.table_name} as f on #{Topic.table_name}.forum_id = f.id"
-    options[:order]      ||= "#{Post.table_name}.created_at DESC"
-    options[:count]      ||= {:select => "#{Post.table_name}.id"}
-    paginate options
+    scope = base_search_scope
+    scope = scope.where("LOWER(#{Post.table_name}.body) LIKE ?", "%#{query}%") unless query.blank?
+    scope.paginate(page: options[:page], per_page: options[:per_page])
   end
 
   def self.search_monitored(user_id, query, options = {})
-    # Same as above, but select only posts in topics monitored by the given user
-    options[:conditions] ||= ["LOWER(#{Post.table_name}.body) LIKE ?", "%#{query}%"] unless query.blank?
-    options[:select]     ||= "#{Post.table_name}.*, #{Topic.table_name}.title as topic_title, f.name as forum_name"
-    options[:joins]      ||= "inner join #{Topic.table_name} on #{Post.table_name}.topic_id = #{Topic.table_name}.id " + 
-                             "inner join #{Forum.table_name} as f on #{Topic.table_name}.forum_id = f.id " +
-                             "inner join #{Monitorship.table_name} as m on #{Post.table_name}.topic_id = m.topic_id AND " +
-                             "m.user_id = #{user_id} AND m.active != 0"
-    options[:order]      ||= "#{Post.table_name}.created_at DESC"
-    options[:count]      ||= {:select => "#{Post.table_name}.id"}
-    paginate options
+    scope = base_search_scope.joins(
+      "inner join #{Monitorship.table_name} as m on #{Post.table_name}.topic_id = m.topic_id AND " \
+      "m.user_id = #{user_id.to_i} AND m.active != 0"
+    )
+    scope = scope.where("LOWER(#{Post.table_name}.body) LIKE ?", "%#{query}%") unless query.blank?
+    scope.paginate(page: options[:page], per_page: options[:per_page])
+  end
+
+  def self.base_search_scope
+    select("#{Post.table_name}.*, #{Topic.table_name}.title as topic_title, f.name as forum_name")
+      .joins(
+        "inner join #{Topic.table_name} on #{Post.table_name}.topic_id = #{Topic.table_name}.id " \
+        "inner join #{Forum.table_name} as f on #{Topic.table_name}.forum_id = f.id"
+      )
+      .order("#{Post.table_name}.created_at DESC")
   end
 
   def forum_name

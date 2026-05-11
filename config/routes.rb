@@ -1,7 +1,7 @@
 AlteredBeast::Application.routes.draw do
   get '/session' => "sessions#create", :as => 'open_id_complete'
 
-  resources :sites, :moderatorships, :monitorship
+  resources :sites, :moderatorships
 
   resources :forums do
     resources :topics do
@@ -16,7 +16,12 @@ AlteredBeast::Application.routes.draw do
   end
   resources :users do
     member do
-      put :suspend, :make_admin, :unsuspend
+      # Accept both PUT (legacy) and PATCH (Rails-4+ form_for default).
+      # Rails 8.1 removed the multi-action `match :a, :b, via:` form;
+      # each action needs its own line.
+      match :suspend,    via: [:put, :patch]
+      match :make_admin, via: [:put, :patch]
+      match :unsuspend,  via: [:put, :patch]
       get :settings
       delete :purge
     end
@@ -24,16 +29,16 @@ AlteredBeast::Application.routes.draw do
 #      get :monitored, :on => :collection, :shallow => true
     end
   end
-  match '/users/:user_id/monitored(.:format)' => 'posts#monitored', :as => 'monitored_posts'
+  get '/users/:user_id/monitored(.:format)' => 'posts#monitored', :as => 'monitored_posts'
 
-  match '/activate/:activation_code' => 'users#activate', :activation_code => nil, :as => 'activate'
-  match '/signup' => 'users#new', :as => 'signup'
-  match '/settings' => 'users#settings', :as => 'settings'
-  match '/login' => 'sessions#new', :as => 'login'
-  match '/logout' => 'sessions#destroy', :as => 'logout'
-  match '/itex'  => 'itex#index'
-  delete '/monitorship/:forum_id/:topic_id' => 'monitorships#destroy', :as => 'monitorship' 
-  match '/monitorship/:forum_id/:topic_id' => 'monitorships#create', :as => 'monitorship' 
+  get '/activate(/:activation_code)' => 'users#activate', :as => 'activate'
+  get '/signup' => 'users#new', :as => 'signup'
+  get '/settings' => 'users#settings', :as => 'settings'
+  get '/login' => 'sessions#new', :as => 'login'
+  get '/logout' => 'sessions#destroy', :as => 'logout'
+  match '/itex' => 'itex#index', via: [:get, :post]
+  delete '/monitorship/:forum_id/:topic_id' => 'monitorships#destroy', :as => 'monitorship'
+  post '/monitorship/:forum_id/:topic_id'   => 'monitorships#create'
 
   resource  :session
 

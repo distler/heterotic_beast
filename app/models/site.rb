@@ -1,12 +1,16 @@
-class Site < ActiveRecord::Base
+class Site < ApplicationRecord
   class UndefinedError < StandardError; end
 
-  has_many :users, :conditions => {:state => 'active'}
-  has_many :all_users, :class_name => 'User'
-  has_many :suspended_users, :class_name => 'User', :conditions => {:state => 'suspended'}
-  has_many :pending_users,   :class_name => 'User', :conditions => {:state => 'pending'}
+  # NOTE: SQL-fragment where-clauses (not equality hashes) — equality
+  # conditions in Rails 4 association scopes propagate as defaults on
+  # `.build`/`.new`, which would override the AASM `:passive` initial state
+  # and break the pending-then-activate signup flow.
+  has_many :users,           -> { where("users.state = ?", "active") }
+  has_many :all_users,       class_name: 'User'
+  has_many :suspended_users, -> { where("users.state = ?", "suspended") }, class_name: 'User'
+  has_many :pending_users,   -> { where("users.state = ?", "pending") },   class_name: 'User'
 
-  has_many :forums, :conditions => {:state => 'public'}
+  has_many :forums,          -> { where("forums.state = ?", "public") }
   has_many :all_forums, :class_name => 'Forum'
   has_many :topics, :through => :forums
   has_many :posts,  :through => :forums
@@ -24,7 +28,10 @@ class Site < ActiveRecord::Base
 
     def find_by_host(name)
       return nil if name.nil?
-      name.downcase! && name.strip! && name.sub!(/^www\./, '')
+      # Each bang method returns nil when nothing changes, so chaining
+      # them with `&&` (as the original code did) short-circuits and
+      # skips later normalization. Apply each unconditionally.
+      name = name.downcase.strip.sub(/^www\./, '')
       sites = where('host = ? or host = ?', name, '')
       sites.reject(&:default?).first || sites.first
     end
@@ -45,7 +52,7 @@ class Site < ActiveRecord::Base
 
   # <3 rspec
   def ordered_forums(*args)
-    forums.public.ordered(*args)
+    forums.ordered_public.ordered(*args)
   end
 
   def default?

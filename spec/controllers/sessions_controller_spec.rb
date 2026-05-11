@@ -14,7 +14,7 @@ describe SessionsController, "POST /create" do
 
   # I think the session is broken. Or something.
   it_assigns :flash => {:notice => :not_nil}#, :session => {:user => :not_nil}
-  it_redirects_to { '/' }
+  it_redirects_to { '/forums' }
   
   it 'fails login and does not redirect' do
     attempt_login 'bad password'
@@ -54,7 +54,7 @@ describe SessionsController, "DELETE /destroy" do
   act! { get :destroy }
   
   it_assigns :session => {:user => nil}
-  it_redirects_to { '/' }
+  it_redirects_to { '/forums' }
 
   it 'deletes token on logout' do
     acting.cookies["auth_token"].should be_nil

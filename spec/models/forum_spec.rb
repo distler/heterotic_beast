@@ -1,5 +1,4 @@
 require File.dirname(__FILE__) + '/../spec_helper'
-require 'model_stubbing'
 
 describe Forum do
   define_models do

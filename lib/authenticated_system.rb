@@ -55,15 +55,15 @@ module AuthenticatedSystem
     #
     # To require logins for all actions, use this in your controllers:
     #
-    #   before_filter :login_required
+    #   before_action :login_required
     #
     # To require logins for specific actions, use this in your controllers:
     #
-    #   before_filter :login_required, :only => [ :edit, :update ]
+    #   before_action :login_required, :only => [ :edit, :update ]
     #
     # To skip this in a subclassed controller:
     #
-    #   skip_before_filter :login_required
+    #   skip_before_action :login_required
     #
     def login_required
       authorized? || access_denied
@@ -106,7 +106,7 @@ module AuthenticatedSystem
 
     # Redirect to the URI stored by the most recent store_location call or
     # to the passed default.  Set an appropriately modified
-    #   after_filter :store_location, :only => [:index, :new, :show, :edit]
+    #   after_action :store_location, :only => [:index, :new, :show, :edit]
     # for any controller you want to be bounce-backable.
     def redirect_back_or_default(default)
       redirect_to(session[:return_to] || default)
@@ -125,7 +125,7 @@ module AuthenticatedSystem
 
     # Called from #current_user.  First attempt to login by the user id stored in the session.
     def login_from_session
-      self.current_user = User.find_by_id(session[:user_id]) if session[:user_id]
+      self.current_user = User.find_by(id: session[:user_id]) if session[:user_id]
     end
 
     # Called from #current_user.  Now, attempt to login by basic authentication information.
@@ -142,7 +142,7 @@ module AuthenticatedSystem
     # Called from #current_user.  Finaly, attempt to login by an expiring token in the cookie.
     # for the paranoid: we _should_ be storing user_token = hash(cookie_token, request IP)
     def login_from_cookie
-      user = cookies[:auth_token] && User.find_by_remember_token(cookies[:auth_token])
+      user = cookies[:auth_token] && User.find_by(remember_token: cookies[:auth_token])
       if user && user.remember_token?
         self.current_user = user
         handle_remember_cookie! false # freshen cookie token (keeping date)

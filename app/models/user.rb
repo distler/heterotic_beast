@@ -1,12 +1,23 @@
-class User < ActiveRecord::Base
-  concerned_with :states, :activation, :posting, :validation
+class User < ApplicationRecord
+  # bcrypt-backed `password=` / `password_confirmation=` / `#authenticate`
+  # via the `password_digest` column. `validations: false` lets us keep
+  # our existing `password_required?`-gated validators in User::Validation
+  # (which handle OpenID-only signups and the post-bcrypt-cutover
+  # `password_digest IS NULL` rows).
+  has_secure_password validations: false
+
+  include User::States
+  include User::Activation
+  include User::Posting
+  include User::Validation
+
   formats_attributes :bio
 
   belongs_to :site, :counter_cache => true
   validates_presence_of :site_id
 
-  has_many :posts, :order => "#{Post.table_name}.created_at desc", :dependent => :delete_all
-  has_many :topics, :order => "#{Topic.table_name}.created_at desc", :dependent => :delete_all
+  has_many :posts,  -> { order("#{Post.table_name}.created_at desc") },  dependent: :delete_all
+  has_many :topics, -> { order("#{Topic.table_name}.created_at desc") }, dependent: :delete_all
 
   has_many :moderatorships, :dependent => :delete_all
   has_many :forums, :through => :moderatorships, :source => :forum do
@@ -16,13 +27,15 @@ class User < ActiveRecord::Base
   end
 
   has_many :monitorships, :dependent => :delete_all
-  has_many :monitored_topics, :through => :monitorships, :source => :topic, :conditions => {"#{Monitorship.table_name}.active" => true}
+  has_many :monitored_topics, -> { where("#{Monitorship.table_name}.active" => true) }, through: :monitorships, source: :topic
 
-  has_permalink :login, :scope => :site_id
+  extend FriendlyId
+  friendly_id :login, use: [:slugged, :scoped], scope: :site, slug_column: :permalink
 
   attr_readonly :posts_count, :last_seen_at
 
-  scope :named_like, lambda { |name| where("users.display_name like ? or users.login like ?", "#{name}%", "#{name}%") }
+  scope :named_like, ->(name) { where('users.display_name like ? or users.login like ?', "#{name}%", "#{name}%") }
+  scope :online,     -> { where('users.last_seen_at >= ?', 10.minutes.ago.utc) }
 
   class << self
 

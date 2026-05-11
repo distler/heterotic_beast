@@ -4,13 +4,11 @@ describe Topic do
   define_models
 
   it "updates forum_id for posts when topic forum is changed" do
-    pending('Causing SQLite3::SQLException') if Topic.connection.class.name =~ /sqlite/i
     topics(:default).update_attribute :forum, forums(:other)
     posts(:default).reload.forum.should == forums(:other)
   end
   
   it "leaves other topic post #forum_ids alone when updating forum" do
-    pending('Causing SQLite3::SQLException') if Topic.connection.class.name =~ /sqlite/i
     topics(:default).update_attribute :forum, forums(:other)
     posts(:other).reload.forum.should == forums(:default)
   end
@@ -25,7 +23,7 @@ describe Topic do
       t = new_topic(:default)
       t.send("#{attr}=", nil)
       t.should_not be_valid
-      t.errors.on(attr).should_not be_nil
+      t.errors[attr].first.should_not be_nil
     end
   end
   
@@ -71,7 +69,7 @@ describe Topic do
     @topic.locked = true ; @topic.save
     @post = @topic.user.reply @topic, 'booya'
     @post.should be_new_record
-    @post.errors.on(:base).should == 'Topic is locked'
+    @post.errors[:base].first.should == 'Topic is locked'
   end
 end
 
@@ -129,27 +127,22 @@ describe Topic, "being moved to another forum" do
   end
   
   it "decrements old forums cached topics_count" do
-    pending('Causing SQLite3::SQLException') if Topic.connection.class.name =~ /sqlite/i
     @moving_forum.should change { @forum.reload.topics.size }.by(-1)
   end
   
   it "decrements old forums cached posts_count" do
-    pending('Causing SQLite3::SQLException') if Topic.connection.class.name =~ /sqlite/i
     @moving_forum.should change { @forum.reload.posts.size }.by(-1)
   end
   
   it "increments new forums cached topics_count" do
-    pending('Causing SQLite3::SQLException') if Topic.connection.class.name =~ /sqlite/i
     @moving_forum.should change { @new_forum.reload.topics.size }.by(1)
   end
   
   it "increments new forums cached posts_count" do
-    pending('Causing SQLite3::SQLException') if Topic.connection.class.name =~ /sqlite/i
     @moving_forum.should change { @new_forum.reload.posts.size }.by(1)
   end
   
   it "moves posts to new forum" do
-    pending('Causing SQLite3::SQLException') if Topic.connection.class.name =~ /sqlite/i
     @topic.posts.each { |p| p.forum.should == @forum }
     @moving_forum.call
     @topic.posts.each { |p| p.reload.forum.should == @new_forum }

@@ -25,7 +25,7 @@ describe Monitorship do
     lambda do
       topics(:other_forum).monitoring_users << users(:default)
     end.should change { Monitorship.count }.by(1)
-    topics(:other_forum).monitoring_users(true).should == [users(:default)]
+    topics(:other_forum).monitoring_users.reload.should == [users(:default)]
   end
 
   it "adds user/topic relation over inactive monitorship" do
@@ -33,7 +33,7 @@ describe Monitorship do
     lambda do
       topics(:other).monitoring_users << users(:default)
     end.should raise_error(ActiveRecord::RecordNotSaved)
-    topics(:other).monitoring_users(true).should == [users(:default)]
+    topics(:other).monitoring_users.reload.should == [users(:default)]
   end
 
   %w(user_id topic_id).each do |attr|
@@ -41,7 +41,7 @@ describe Monitorship do
       mod = new_monitorship(:default)
       mod.send("#{attr}=", nil)
       mod.should_not be_valid
-      mod.errors.on(attr).should_not be_nil
+      mod.errors[attr].first.should_not be_nil
     end
   end
   

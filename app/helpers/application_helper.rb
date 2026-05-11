@@ -85,6 +85,27 @@ module ApplicationHelper
     "<img src='#{asset_path spinner}' style='display:none; vertical-align:middle;' id='#{id.to_s}_spinner'/>".html_safe
   end
 
+  def link_to_function(name, function, html_options = {})
+    onclick = "#{"#{html_options[:onclick]}; " if html_options[:onclick]}#{function}; return false;"
+    href = html_options[:href] || '#'
+    content_tag(:a, name, html_options.merge(:href => href, :onclick => onclick))
+  end
+
+  def remote_function(options)
+    js_options = { 'asynchronous' => 'true', 'evalScripts' => 'true' }
+    js_options['method'] = "'#{options[:method]}'" if options[:method]
+    if protect_against_forgery?
+      js_options['parameters'] =
+        "'#{request_forgery_protection_token}=' + " \
+        "encodeURIComponent('#{escape_javascript(form_authenticity_token)}')"
+    end
+    js_options['parameters'] = "#{options[:with]} + '&' + #{js_options['parameters']}" if options[:with] && js_options['parameters']
+    js_options['parameters'] ||= options[:with] if options[:with]
+    json = '{' + js_options.map { |k, v| "#{k}:#{v}" }.join(', ') + '}'
+    url = url_for(options[:url])
+    "new Ajax.Request('#{escape_javascript(url)}', #{json})".html_safe
+  end
+
   def edited_on_tag(post)
     if (post.updated_at - post.created_at > 5.minutes)
       %{<p class='date'><abbr class='edited'  title="#{post.created_at.xmlschema}">#{I18n.t 'txt.post_edited',

@@ -1,4 +1,4 @@
-class Topic < ActiveRecord::Base
+class Topic < ApplicationRecord
   include User::Editable
 
   before_validation :set_default_attributes, :on => :create
@@ -20,23 +20,26 @@ class Topic < ActiveRecord::Base
   # forum's site, set by callback
   belongs_to :site, :counter_cache => true
 
-  has_many :posts,       :order => "#{Post.table_name}.created_at", :dependent => :delete_all
-  has_one  :recent_post, :order => "#{Post.table_name}.created_at DESC", :class_name => "Post"
-  
-  has_many :voices, :through => :posts, :source => :user, :uniq => true
+  has_many :posts,       -> { order("#{Post.table_name}.created_at") }, dependent: :delete_all
+  has_one  :recent_post, -> { order("#{Post.table_name}.created_at DESC") }, class_name: 'Post'
+
+  # `has_many :posts` carries an `ORDER BY posts.created_at` default scope,
+  # which propagates into `voices` and conflicts with `DISTINCT` under MySQL's
+  # ONLY_FULL_GROUP_BY (Trilogy::ProtocolError 3065). Unscope the order here.
+  has_many :voices, -> { unscope(:order).distinct }, through: :posts, source: :user
   
   has_many :monitorships, :dependent => :delete_all
-  has_many :monitoring_users, :through => :monitorships, :source => :user, :conditions => {"#{Monitorship.table_name}.active" => true}
+  has_many :monitoring_users, -> { where("#{Monitorship.table_name}.active" => true) }, through: :monitorships, source: :user
   
   validates_presence_of :user_id, :site_id, :forum_id, :title
   validates_presence_of :body, :on => :create
 
   attr_accessor :body
-  attr_accessible :title, :body
 
   attr_readonly :posts_count, :hits
 
-  has_permalink :title, :scope => :forum_id
+  extend FriendlyId
+  friendly_id :title, use: [:slugged, :scoped], scope: :forum, slug_column: :permalink
 
   def to_s
     title

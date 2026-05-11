@@ -32,7 +32,7 @@ describe User do
     it "requires #{attr}" do
       lambda do
         u = create_user attr => nil
-        u.errors.on(attr).should_not be_nil
+        u.errors[attr].first.should_not be_nil
       end.should_not change(User, :count)
     end
   end
@@ -57,17 +57,17 @@ describe User do
   end
 
   it 'resets password' do
-    users(:default).update_attributes(:password => 'new password', :password_confirmation => 'new password')
+    users(:default).update(:password => 'new password', :password_confirmation => 'new password')
     User.authenticate(users(:default).login, 'new password').should == users(:default)
   end
 
   it 'does not rehash password' do
-    users(:default).update_attributes(:login => users(:default).login.reverse)
-    User.authenticate(users(:default).login, 'test').should == users(:default)
+    users(:default).update(:login => users(:default).login.reverse)
+    User.authenticate(users(:default).login, 'test99').should == users(:default)
   end
 
   it 'authenticates user' do
-    User.authenticate(users(:default).login, 'test').should == users(:default)
+    User.authenticate(users(:default).login, 'test99').should == users(:default)
   end
 
   it 'sets remember token' do
@@ -116,7 +116,7 @@ describe User do
 
   it 'does not authenticate suspended user' do
     users(:default).suspend!
-    User.authenticate('quentin', 'test').should_not == users(:default)
+    User.authenticate('quentin', 'test99').should_not == users(:default)
   end
 
   it 'unsuspends user' do
@@ -134,7 +134,7 @@ describe User do
   it 'finds currently online users' do
     user = users(:default)
     user.seen!
-    User.online.find_by_id(user.id).should_not be_nil
+    User.online.find_by(id: user.id).should_not be_nil
   end
 
   protected
@@ -171,7 +171,7 @@ describe User, "with no created users" do
   def make_user(site, login, email)
     user = User.new :login => login, :email => email, :password => 'monkey', :password_confirmation => 'monkey'
     user.site_id = site.id
-    # user.stub!(:site).and_return @site
+    # user.stub(:site).and_return @site
     user.save!
     user
   end

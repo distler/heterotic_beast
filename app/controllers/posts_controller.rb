@@ -1,10 +1,8 @@
 require 'itex_stringsupport'
 
 class PostsController < ApplicationController
-  before_filter :find_parents
-  before_filter :find_post, :only => [:edit, :update, :destroy]
-
-  cache_sweeper :posts_sweeper, :only => [:create, :update, :destroy]
+  before_action :find_parents
+  before_action :find_post, :only => [:edit, :update, :destroy]
 
   # /posts
   # /users/1/posts
@@ -61,7 +59,7 @@ class PostsController < ApplicationController
 
   def update
     respond_to do |format|
-      if @post.update_attributes(params[:post])
+      if @post.update(post_params)
         flash[:notice] = 'Post was successfully updated.'
         format.html { redirect_to(forum_topic_path(@forum, @topic, {:anchor => dom_id(@post), :page => @topic.post_page(@post)})) }
         format.xml  { head :ok }
@@ -77,7 +75,7 @@ class PostsController < ApplicationController
 
     respond_to do |format|
       format.html do
-          if @forum.topics.exists?(@topic)
+          if @forum.topics.exists?(@topic.id)
             redirect_to(forum_topic_path(@forum, @topic))
           else
             redirect_to(@forum)
@@ -93,8 +91,8 @@ class PostsController < ApplicationController
       if params[:user_id]
         @parent = @user = User.find(params[:user_id])
       elsif params[:forum_id]
-        @parent = @forum = Forum.find_by_permalink(params[:forum_id])
-        @parent = @topic = @forum.topics.find_by_permalink(params[:topic_id]) if params[:topic_id]
+        @parent = @forum = Forum.find_by(permalink: params[:forum_id])
+        @parent = @topic = @forum.topics.find_by(permalink: params[:topic_id]) if params[:topic_id]
       end
     end
 
@@ -105,5 +103,9 @@ class PostsController < ApplicationController
       else
         raise ActiveRecord::RecordNotFound
       end
+    end
+
+    def post_params
+      params.fetch(:post, {}).permit(:body, :topic_id)
     end
 end

@@ -1,5 +1,8 @@
 ##Choose the method for delivering signup emails
-ActionMailer::Base.delivery_method = :smtp # or :sendmail
+# Don't override the test environment, which sets delivery_method = :test
+# in config/environments/test.rb so deliveries accumulate in
+# ActionMailer::Base.deliveries instead of attempting SMTP.
+ActionMailer::Base.delivery_method = :smtp unless Rails.env.test?
 
 ##Configuration for using an SMTP server 
 ActionMailer::Base.smtp_settings = {

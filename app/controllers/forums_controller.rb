@@ -1,6 +1,6 @@
 class ForumsController < ApplicationController
-  before_filter :admin_required, :except => [:index, :show]
-  before_filter :find_forum, :only => [:show, :edit, :update, :destroy]
+  before_action :admin_required, :except => [:index, :show]
+  before_action :find_forum, :only => [:show, :edit, :update, :destroy]
 
   # GET /forums
   # GET /forums.xml
@@ -8,7 +8,7 @@ class ForumsController < ApplicationController
     # reset the page of each forum we have visited when we go back to index
     session[:forums_page] = nil
 
-    @forums = admin? ? current_site.all_forums : current_site.ordered_forums
+    @forums = admin? ? current_site.all_forums.ordered : current_site.ordered_forums
 
     respond_to do |format|
       format.html { set_content_type_header } # index.html.erb
@@ -54,7 +54,7 @@ class ForumsController < ApplicationController
   # POST /forums
   # POST /forums.xml
   def create
-    @forum = current_site.forums.build(params[:forum])
+    @forum = current_site.forums.build(forum_params)
 
     respond_to do |format|
       if @forum.save
@@ -73,7 +73,7 @@ class ForumsController < ApplicationController
   def update
 
     respond_to do |format|
-      if @forum.update_attributes(params[:forum])
+      if @forum.update(forum_params)
         flash[:notice] = I18n.t 'txt.forum_updated', :default => 'Forum was successfully updated.'
         format.html { redirect_to(@forum) }
         format.xml  { head :ok }
@@ -98,7 +98,10 @@ class ForumsController < ApplicationController
   protected
 
     def find_forum
-      @forum = admin? ? current_site.all_forums.find_by_permalink!(params[:id]) : current_site.forums.find_by_permalink!(params[:id])
+      @forum = admin? ? current_site.all_forums.find_by!(permalink: params[:id]) : current_site.forums.find_by!(permalink: params[:id])
     end
 
+    def forum_params
+      params.fetch(:forum, {}).permit(:name, :description, :state, :position)
+    end
 end

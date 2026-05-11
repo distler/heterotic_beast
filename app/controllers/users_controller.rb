@@ -1,13 +1,13 @@
 require 'itex_stringsupport'
 
 class UsersController < ApplicationController
-  before_filter :admin_required, :only => [:suspend, :unsuspend, :destroy, :purge, :edit]
-  before_filter :find_user, :only => [:update, :show, :edit, :suspend, :unsuspend, :destroy, :purge]
-  before_filter :login_required, :only => [:settings, :update]
+  before_action :admin_required, :only => [:suspend, :unsuspend, :destroy, :purge, :edit]
+  before_action :find_user, :only => [:update, :show, :edit, :suspend, :unsuspend, :destroy, :purge]
+  before_action :login_required, :only => [:settings, :update]
 
   # Brainbuster Captcha
-  # before_filter :create_brain_buster, :only => [:new]
-  # before_filter :validate_brain_buster, :only => [:create]
+  # before_action :create_brain_buster, :only => [:new]
+  # before_action :validate_brain_buster, :only => [:create]
 
   def index
     users_scope = if admin?
@@ -46,18 +46,33 @@ class UsersController < ApplicationController
 
   def create
     cookies.delete :auth_token
-    @user = params[:user] ?
-             current_site.users.build(params[:user]) :
-             # current_site.users.build(User.where(:email => params[:email]).first.login)    
-             User.where(:email => params[:email].purify).first
-    @user.save if @user.valid?
-    @user.register if @user.valid?
-    unless @user.new_record?
-      redirect_back_or_default(:login)
-      flash[:notice] = I18n.t 'txt.activation_required', 
-        :default => "Thanks for signing up! Please click the link in your email to activate your account"
+    if params[:user]
+      create_signup
     else
-      render :action => 'new'
+      create_password_reset
+    end
+  end
+
+  def activate
+    user = params[:activation_code].blank? ? nil :
+      current_site.all_users.where(activation_code: params[:activation_code]).first
+    if user
+      self.current_user = user
+      if user.state == 'pending'
+        # Signup activation: pending → active.
+        user.activate!
+        flash[:notice] = "Signup complete!"
+        redirect_back_or_default(:forums)
+      else
+        # Password-reset login: the one-time code is consumed here so it
+        # can't be replayed. The user lands on /settings where they can
+        # change their password.
+        user.update_columns(activation_code: '')
+        flash[:notice] = "Logged in. Update your password below if you forgot it."
+        redirect_to settings_path
+      end
+    else
+      redirect_back_or_default(:forums)
     end
   end
 
@@ -74,7 +89,7 @@ class UsersController < ApplicationController
   def update
     @user = admin? ? find_user : current_user
     respond_to do |format|
-      if @user.update_attributes(params[:user])
+      if @user.update(user_params)
         flash[:notice] = 'User account was successfully updated.'
         format.html { redirect_to(settings_path) }
         format.xml  { head :ok }
@@ -85,15 +100,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def activate
-    # not sure why this was using a symbol. Let's use the real false.
-    self.current_user = params[:activation_code].blank? ? false : current_site.all_users.find_in_state(:first, :pending, :conditions => {:activation_code => params[:activation_code]})
-    if logged_in?
-      current_user.activate!
-      flash[:notice] = "Signup complete!"
-    end
-    redirect_back_or_default(:forums)
-  end
 
   def suspend
     @user.suspend! 
@@ -108,7 +114,7 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    User.destroy(@user)
+    @user.destroy
     flash[:notice] = "User was deleted."
     redirect_to users_path
   end
@@ -121,12 +127,45 @@ class UsersController < ApplicationController
   def make_admin
     redirect_back_or_default(:forums) and return unless admin?
     @user = find_user
-    @user.admin = (params[:user][:admin] == "1")
+    @user.admin = (params.dig(:user, :admin) == "1")
     @user.save
     redirect_to @user
   end
 
   protected
+
+    def create_signup
+      @user = current_site.users.build(user_params)
+      @user.save if @user.valid?
+      @user.register! if @user.persisted?
+      if @user.persisted?
+        redirect_back_or_default(:login)
+        flash[:notice] = I18n.t 'txt.activation_required',
+          :default => "Thanks for signing up! Please click the link in your email to activate your account"
+      else
+        render :action => 'new'
+      end
+    end
+
+    # "E-mail me the link" on /login. Find the user by email; if they
+    # exist, generate a fresh one-time activation_code and email them a
+    # link. The link goes through `#activate`, which (for already-active
+    # users) clears the code, logs them in, and lands them on /settings.
+    # We always show the same notice so this can't be used to probe
+    # which emails are on file.
+    def create_password_reset
+      email = params[:email].to_s.purify.strip.downcase
+      user  = current_site.all_users.find_by(email: email) if email.present?
+      if user
+        user.update_columns(
+          activation_code: Digest::SHA1.hexdigest("#{Time.now.to_f}-#{user.id}-#{SecureRandom.hex}")
+        )
+        UserMailer.password_reset(user).deliver
+      end
+      redirect_to login_path
+      flash[:notice] = I18n.t 'txt.password_reset_sent',
+        :default => "If that address is on file, we've sent a login link to it."
+    end
 
     def find_user
       @user = if admin?
@@ -144,5 +183,12 @@ class UsersController < ApplicationController
 
     def render_or_redirect_for_captcha_failure
       render :action => 'new'
+    end
+
+    def user_params
+      permitted = [:login, :email, :password, :password_confirmation, :openid_url,
+                   :display_name, :bio, :website]
+      permitted += [:admin, :remember_token, :remember_token_expires_at] if admin?
+      params.fetch(:user, {}).permit(*permitted)
     end
 end

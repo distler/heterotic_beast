@@ -11,7 +11,7 @@ describe Post do
     p = new_post(:default)
     p.body = nil
     p.should_not be_valid
-    p.errors.on(:body).should_not be_nil
+    p.errors[:body].first.should_not be_nil
   end
 
   it "formats body html" do

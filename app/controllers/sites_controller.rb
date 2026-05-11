@@ -1,9 +1,9 @@
 class SitesController < ApplicationController
-  before_filter :admin_required
-  before_filter :find_site, :only => [:show, :edit, :update, :destroy]
+  before_action :admin_required
+  before_action :find_site, :only => [:show, :edit, :update, :destroy]
 
   def index
-    @sites = Site.paginate(:page => current_page, :order => 'host ASC')
+    @sites = Site.order('host ASC').paginate(:page => current_page)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -32,7 +32,7 @@ class SitesController < ApplicationController
   end
 
   def create
-    @site = Site.new(params[:site])
+    @site = Site.new(site_params)
 
     respond_to do |format|
       if @site.save
@@ -60,7 +60,7 @@ class SitesController < ApplicationController
   def update
 
     respond_to do |format|
-      if @site.update_attributes(params[:site])
+      if @site.update(site_params)
         flash[:notice] = 'Site was successfully updated.'
         format.html { redirect_to(@site) }
         format.xml  { head :ok }
@@ -95,4 +95,7 @@ class SitesController < ApplicationController
       @site = Site.find(params[:id])
     end
 
+    def site_params
+      params.fetch(:site, {}).permit(:name, :host, :description, :tagline)
+    end
 end

@@ -1,41 +1,49 @@
 source "https://rubygems.org"
 
-gem "rack", "= 1.4.5"
-gem 'rails', '3.2.22.2'
+gem 'rails', '~> 8.1.3'
 gem 'test-unit'
 gem 'ruby-openid', '>= 2.0.4', :require => "openid"
+gem 'rexml'  # extracted from Ruby stdlib in 3.0; ruby-openid 2.x still requires it
 gem 'rack-openid'
 gem 'open_id_authentication'
-gem 'will_paginate', :git => 'https://github.com/distler/will_paginate.git', :branch => 'master'
+gem 'will_paginate', :git => 'https://github.com/distler/will_paginate.git'
 gem "itextomml", ">=1.5.1"
-gem 'thin'
-gem "prototype-rails", "~> 3.2.1"
-gem 'sass-rails', "3.2.6"
+gem 'puma'
+gem 'sass-rails', "~> 6.0"
 gem 'uglifier'
 gem 'httparty'
 
+# Rails 4 extracted these from core:
+gem 'rails-deprecated_sanitizer'     # restores HTML::Tokenizer / WhiteListSanitizer
+gem 'activemodel-serializers-xml'    # `.to_xml` extracted from Active{Model,Record} in Rails 5
+
+gem 'bcrypt', '~> 3.1'
 gem 'acts_as_list'
-gem 'acts_as_state_machine', :git => 'https://github.com/ilabsolutions/acts_as_state_machine.git', :ref => '665633d0db'
-gem 'permalink_fu'
-gem 'nokogiri'
+gem 'aasm'
+gem 'friendly_id', '~> 5.1.0'
+gem 'nokogiri', "~> 1.16"
 gem "syntax", "~> 1.1.0"
 gem "maruku", :git => 'https://github.com/distler/maruku.git', :branch => 'nokogiri'
-gem "auto_migrations", :git => 'https://github.com/yzhang/auto_migrations_rails4.git', :ref => '6a68f95'
 gem 'rake'
 
+# Ruby 3.3+ ships `securerandom` as a default gem; Passenger's
+# load order can pick a different version than the bundle resolves to,
+# yielding `Gem::LoadError: can't activate securerandom-X, already
+# activated securerandom-Y`. Pinning explicitly forces bundler to own
+# the resolution.
+gem 'securerandom'
+
 group :development, :test do
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 6.0'
+  gem 'rspec-activemodel-mocks'
+  gem 'factory_bot_rails', '~> 6.0'
   gem 'highline'
-  gem 'sqlite3'
-  # gem 'ruby-debug19'
-  # gem 'autotest'
-  gem 'rails3-generators'
+  gem 'sqlite3', '~> 2.1'
+  # Rails 5 extracted `assigns` and `assert_template` into this gem.
+  gem 'rails-controller-testing'
 end
 
 group :production do
-  gem 'mysql2', '~> 0.5.2' 
-end
-
-group :assets do
-  gem 'turbo-sprockets-rails3'
+#  gem 'trilogy'
+  gem 'sqlite3', '~> 2.1'
 end

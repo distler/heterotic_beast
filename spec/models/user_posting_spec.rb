@@ -76,7 +76,7 @@ describe User, "#post for moderators" do
   include TopicCreatePostHelper
   
   before do
-    @user.stub!(:moderator_of?).and_return(true)
+    @user.stub(:moderator_of?).and_return(true)
   end
   
   it "sets sticky bit" do
@@ -150,7 +150,7 @@ describe User, "#revise(topic) for moderators" do
   include TopicUpdatePostHelper
   
   before do
-    @user.stub!(:moderator_of?).and_return(true)
+    @user.stub(:moderator_of?).and_return(true)
   end
   
   it "sets sticky bit" do
@@ -234,5 +234,53 @@ describe User, "#reply" do
 
   def post!
     @user.reply topics(:default), 'duane, i think you might be color blind.'
+  end
+end
+
+# Regression: under strong-parameters, the Topic params hash for an admin
+# may not include :forum_id (the form omits the hidden field on
+# single-forum sites, and the controller's :forum_id permit is conditional).
+# `revise_topic` used to unconditionally write `topic.forum_id =
+# attributes[:forum_id]` for moderators, nulling out the value just set by
+# `User#post`. Once forum_id is nil, `set_default_attributes` can't derive
+# site_id either, and topic creation fails with "Site can't be blank, Forum
+# can't be blank". Pin the present-key behavior in both create and revise.
+describe User, "#post for admins (forum_id preservation)" do
+  before do
+    @user  = users(:admin)
+    @forum = forums(:default)
+  end
+
+  it "leaves forum_id intact when :forum_id is absent from attributes" do
+    topic = @user.post(@forum, :title => 'foo', :body => 'bar')
+    expect(topic).not_to be_new_record
+    expect(topic.forum_id).to eq(@forum.id)
+    expect(topic.site_id).to  eq(@forum.site_id)
+  end
+
+  it "leaves forum_id intact when :forum_id is explicitly nil" do
+    topic = @user.post(@forum, :title => 'foo', :body => 'bar', :forum_id => nil)
+    expect(topic).not_to be_new_record
+    expect(topic.forum_id).to eq(@forum.id)
+  end
+
+  it "still honors a moderator-supplied :forum_id when present" do
+    other = forums(:other)
+    topic = @user.post(@forum, :title => 'foo', :body => 'bar', :forum_id => other.id)
+    expect(topic).not_to be_new_record
+    expect(topic.forum_id).to eq(other.id)
+  end
+end
+
+describe User, "#revise(topic) (forum_id preservation)" do
+  before do
+    @user  = users(:admin)
+    @topic = topics(:default)
+  end
+
+  it "does not null out forum_id when the key is absent from attributes" do
+    original_forum_id = @topic.forum_id
+    @user.revise(@topic, :title => 'renamed')
+    expect(@topic.reload.forum_id).to eq(original_forum_id)
   end
 end

@@ -1,7 +1,7 @@
 class TopicsController < ApplicationController
-  before_filter :find_forum
-  before_filter :find_topic, :only => [:show, :edit, :update, :destroy]
-  before_filter :admin_required, :only => [:edit, :update, :destroy]
+  before_action :find_forum
+  before_action :find_topic, :only => [:show, :edit, :update, :destroy]
+  before_action :admin_required, :only => [:edit, :update, :destroy]
 
   def index
     respond_to do |format|
@@ -42,7 +42,7 @@ class TopicsController < ApplicationController
   end
 
   def create
-    @topic = current_user.post @forum, params[:topic]
+    @topic = current_user.post @forum, topic_params
 
     respond_to do |format|
       if @topic.new_record?
@@ -57,7 +57,7 @@ class TopicsController < ApplicationController
   end
 
   def update
-    current_user.revise @topic, params[:topic]
+    current_user.revise @topic, topic_params
     respond_to do |format|
       if @topic.errors.empty?
         flash[:notice] = 'Topic was successfully updated.'
@@ -82,10 +82,14 @@ class TopicsController < ApplicationController
   protected
 
     def find_forum
-      @forum = current_site.forums.find_by_permalink!(params[:forum_id])
+      @forum = current_site.forums.find_by!(permalink: params[:forum_id])
     end
   
     def find_topic
-      @topic = @forum.topics.find_by_permalink!(params[:id])
+      @topic = @forum.topics.find_by!(permalink: params[:id])
+    end
+
+    def topic_params
+      params.fetch(:topic, {}).permit(:title, :body, :forum_id, :sticky, :locked)
     end
 end

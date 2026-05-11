@@ -20,7 +20,7 @@ describe Moderatorship do
     lambda do
       forums(:other).moderators << users(:default)
     end.should change { Moderatorship.count }.by(1)
-    forums(:other).moderators(true).should == [users(:default)]
+    forums(:other).moderators.reload.should == [users(:default)]
   end
   
   %w(user forum).each do |attr|
@@ -28,7 +28,7 @@ describe Moderatorship do
       mod = new_moderatorship(:default)
       mod.send("#{attr}=", nil)
       mod.should_not be_valid
-      mod.errors.on("#{attr}_id".to_sym).should_not be_nil
+      mod.errors["#{attr}_id".to_sym].first.should_not be_nil
     end
   end
   

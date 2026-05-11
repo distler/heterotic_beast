@@ -1,12 +1,10 @@
 # coding: utf-8
-class UserMailer < ActionMailer::Base
+class UserMailer < ApplicationMailer
   default :from => "your_domain@example.com"
 
   def signup_notification(user)
     @user = user
-    host = user.site.host
-    host << ENV['RAILS_RELATIVE_URL_ROOT'] if ENV['RAILS_RELATIVE_URL_ROOT'] 
-    @url = activate_url(user.activation_code, :host => host)
+    @url = activate_url(user.activation_code, :host => user.site.host)
     mail :to => user.email, :from => user.site.admin.email, :subject => subject(user, "Please activate your new account")
   end
 
@@ -14,6 +12,13 @@ class UserMailer < ActionMailer::Base
     @user = user
     @url = root_url(:host => user.site.host)
     mail :to => user.email, :from => user.site.admin.email, :subject => subject(user, "Your account has been activated!")
+  end
+
+  def password_reset(user)
+    @user = user
+    @url = activate_url(user.activation_code, :host => user.site.host)
+    mail :to => user.email, :from => user.site.admin.email,
+         :subject => subject(user, "Password reset login link")
   end
 
   protected

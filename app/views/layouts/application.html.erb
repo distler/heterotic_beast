@@ -4,12 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title><%= current_site && current_site.name || I18n.t('txt.beast_title', :default => 'Altered Beast') %><%= " - " + @page_title if @page_title %></title>
-    <%= favicon_link_tag %>
+    <%= favicon_link_tag '/favicon.ico', skip_pipeline: true %>
     <%= stylesheet_link_tag 'application' %>
     <%= javascript_include_tag 'application' %>
 <script type="text/x-mathjax-config">
 <!--//--><![CDATA[//><!--
-  MathJax.Ajax.config.path["Contrib"] = "<%= asset_path 'MathJax' %>";
+  MathJax.Ajax.config.path["Contrib"] = "<%= asset_path 'MathJax', skip_pipeline: true %>";
   MathJax.Hub.Config({
     MathML: { useMathMLspacing: true },
     "HTML-CSS": { scale: 90,
@@ -39,7 +39,7 @@
     if (mathml_unsupported) {
       // MathML does not seem to be supported...
       var s = document.createElement('script');
-      s.src = "<%= asset_path 'MathJax/MathJax.js' %>?config=MML_HTMLorMML";
+      s.src = "<%= asset_path 'MathJax/MathJax.js', skip_pipeline: true %>?config=MML_HTMLorMML";
       document.querySelector('head').appendChild(s);
     } else {
       document.head.insertAdjacentHTML("beforeend", '<style>svg[viewBox] {max-width: 100%}</style>');

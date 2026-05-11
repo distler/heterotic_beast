@@ -36,7 +36,7 @@ describe TopicsController, "GET #show" do
   it_renders :template, :show
   
   it "should render atom feed" do
-    pending "no atom support yet"
+    skip "no atom support yet"
   end
   
   it "increments topic hit count" do
@@ -70,12 +70,12 @@ describe TopicsController, "GET #show" do
   
     it "doesn't increment topic hit count for same user" do
       stub_topic!
-      @topic.stub!(:hit!).and_return { raise "Noooooo" }
+      @topic.stub(:hit!).and_raise("Noooooo")
       act!
     end
     
     it "marks User#last_seen_at" do
-      @controller.stub!(:current_user).and_return(@user)
+      @controller.stub(:current_user).and_return(@user)
       @user.should_receive(:seen!)
       act!
     end
@@ -93,9 +93,18 @@ describe TopicsController, "GET #show" do
 
 protected
   def stub_topic!
-    Forum.stub!(:find_by_permalink).with(@forum.to_param).and_return(@forum)
-    @forum.stub!(:topics).and_return([])
-    @forum.topics.should_receive(:find_by_permalink).with(@topic.to_param).and_return(@topic)
+    # The controller now uses `find_by!(permalink: …)` (Rails 4+) on
+    # `current_site.forums` and `@forum.topics`, not the legacy
+    # `Forum.find_by_permalink`. Intercept both chains so the controller
+    # ends up with the test's `@forum` and `@topic` rather than fresh DB
+    # instances.
+    forums_relation = double('forums_relation')
+    topics_relation = double('topics_relation')
+    @controller.stub(:current_site).and_return(@site = sites(:default))
+    @site.stub(:forums).and_return(forums_relation)
+    forums_relation.stub(:find_by!).with(permalink: @forum.to_param).and_return(@forum)
+    @forum.stub(:topics).and_return(topics_relation)
+    topics_relation.should_receive(:find_by!).with(permalink: @topic.to_param).and_return(@topic)
   end
 end
 
@@ -131,7 +140,10 @@ describe TopicsController, "GET #edit" do
   act! { get :edit, :forum_id => @forum.to_param, :id => @topic.to_param }
   
   before do
-    login_as :default
+    # admin_required for #edit; the spec used to work because
+    # `users(:default)` was being auto-promoted to admin via a
+    # cached-association bug (now fixed).
+    login_as :admin
     @forum  = forums(:default)
     @topic  = topics(:default)
   end
@@ -185,7 +197,8 @@ end
 
 describe TopicsController, "PUT #update" do
   before do
-    login_as :default
+    # admin_required for #update.
+    login_as :admin
     @forum = forums(:default)
     @topic = topics(:default)
   end
@@ -204,7 +217,7 @@ describe TopicsController, "PUT #update" do
 
     before do
       @attributes = {:title => ''}
-      @topic.update_attributes @attributes
+      @topic.update @attributes
     end
     
     it_assigns :topic, :forum
@@ -225,7 +238,7 @@ describe TopicsController, "PUT #update" do
 
     before do
       @attributes = {:title => ''}
-      @topic.update_attributes @attributes
+      @topic.update @attributes
     end
     
     it_assigns :topic, :forum
@@ -236,9 +249,10 @@ end
 describe TopicsController, "DELETE #destroy" do
   define_models
   act! { delete :destroy, :forum_id => @forum.to_param, :id => @topic.to_param }
-  
+
   before do
-    login_as :default
+    # admin_required for #destroy.
+    login_as :admin
     @forum = forums(:default)
     @topic = topics(:default)
   end
@@ -252,5 +266,35 @@ describe TopicsController, "DELETE #destroy" do
 
     it_assigns :topic, :forum
     it_renders :blank
+  end
+end
+
+# Regression: an admin posting a new topic via the form must succeed even
+# when the strong-params permit list is hit. Pre-fix, this raised:
+#   "Site can't be blank, Forum can't be blank"
+# because `User#revise_topic` overwrote `topic.forum_id` with a missing
+# attribute. Pin the end-to-end controller path.
+describe TopicsController, "POST #create as admin (forum_id preservation)" do
+  before do
+    login_as :admin
+    @forum = forums(:default)
+  end
+
+  it "creates the topic with the right forum and site" do
+    post :create, :forum_id => @forum.to_param, :topic => { :title => 'admin topic', :body => 'with body' }
+    topic = assigns(:topic)
+    expect(topic).to be_persisted
+    expect(topic.forum_id).to eq(@forum.id)
+    expect(topic.site_id).to  eq(@forum.site_id)
+    expect(response).to be_redirect
+  end
+
+  it "honors a moderator-supplied :forum_id when present (move-on-create)" do
+    other = forums(:other)
+    post :create, :forum_id => @forum.to_param,
+                  :topic    => { :title => 'admin topic', :body => 'b', :forum_id => other.id }
+    topic = assigns(:topic)
+    expect(topic).to be_persisted
+    expect(topic.forum_id).to eq(other.id)
   end
 end

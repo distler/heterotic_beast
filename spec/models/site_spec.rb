@@ -10,7 +10,7 @@ describe Site do
   it "requires name" do
     site = new_site(:default, :name => nil, :host => 'foo.bar')
     site.should_not be_valid
-    site.errors.on(:name).should_not be_nil
+    site.errors[:name].first.should_not be_nil
   end
   
   it "allows blank host" do
@@ -22,13 +22,13 @@ describe Site do
   it "validates uniqueness of host" do
     site = new_site(:default, :host => sites(:other).host, :name => 'foo.bar')
     site.should_not be_valid
-    site.errors.on(:host).should_not be_nil
+    site.errors[:host].first.should_not be_nil
   end
   
   it "validates uniqueness of blank host" do
     site = new_site(:default, :host => '', :name => 'foo.bar')
     site.should_not be_valid
-    site.errors.on(:host).should_not be_nil
+    site.errors[:host].first.should_not be_nil
   end
   
   it "downcases set host" do

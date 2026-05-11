@@ -2,6 +2,7 @@
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
+require 'authenticated_test_helper'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -16,6 +17,9 @@ RSpec.configure do |config|
   # config.mock_with :flexmock
   # config.mock_with :rr
   config.mock_with :rspec
+  config.include AuthenticatedTestHelper, type: :controller
+  config.include AuthenticatedTestHelper, type: :helper
+  config.include AuthenticatedTestHelper, type: :view
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -25,8 +29,9 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
+  # Sets a controller-spec stub for #current_site. Mirrors the legacy helper.
   def current_site(site)
-    @controller.stub!(:current_site).and_return(@site = site ? sites(site) : nil)
+    @controller.stub(:current_site).and_return(@site = site ? sites(site) : nil)
   end
 
 end

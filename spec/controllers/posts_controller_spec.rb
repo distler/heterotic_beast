@@ -231,3 +231,64 @@ describe PostsController, "DELETE #destroy" do
     it_renders :blank
   end
 end
+
+# Regression: PostsController's #create and #update both build a redirect
+# anchor via `dom_id(@post)`. In Rails 3.2 controllers auto-included
+# ActionView::RecordIdentifier; in Rails 4 it became view-only. We restore
+# it on ApplicationController. If that include is removed, both actions
+# raise `NoMethodError: undefined method 'dom_id' for ...PostsController`.
+describe PostsController, "redirect anchor uses dom_id (controller-side)" do
+  before do
+    login_as :default
+    @forum = forums(:default)
+    @topic = topics(:default)
+    @post  = posts(:default)
+  end
+
+  it "PUT #update redirects to the post's dom_id anchor without raising" do
+    expect {
+      put :update,
+          :forum_id => @forum.to_param, :topic_id => @topic.to_param,
+          :id       => @post.to_param,
+          :post     => { :body => 'edited body, long enough to satisfy validation' }
+    }.not_to raise_error
+    expect(response).to be_redirect
+    expect(response.location).to include("#post_#{@post.id}")
+  end
+
+  it "responds to dom_id at the controller level" do
+    expect(controller).to respond_to(:dom_id)
+    expect(controller.send(:dom_id, @post)).to eq("post_#{@post.id}")
+  end
+end
+
+# Regression: clicking "edit post" on the topic page upgrades the link to a
+# remote (Ajax) request, so the format.js path renders edit.js.erb. Pre-fix
+# this was edit.js.rjs, which Rails 4 (without prototype-rails) cannot
+# render — the request hung / 500'd, leaving the spinner spinning forever.
+describe PostsController, "GET #edit (format.js)" do
+  render_views
+
+  before do
+    login_as :default
+    @forum = forums(:default)
+    @topic = topics(:default)
+    @post  = posts(:default)
+  end
+
+  it "renders edit.js.erb successfully" do
+    # Rails 4.2+ rejects non-XHR JS GETs (cross-origin script protection),
+    # so set X-Requested-With explicitly.
+    request.env['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+    # _formatting.html.erb references a Sprockets asset that isn't
+    # precompiled in the test env — stub it out so the render completes.
+    allow_any_instance_of(ActionView::Base).to receive(:asset_path).and_return('/stub')
+
+    get :edit, :forum_id => @forum.to_param, :topic_id => @topic.to_param,
+               :id       => @post.to_param, :format => 'js'
+    expect(response).to be_successful
+    expect(response.body).to include(%{Element.replace("edit",})
+    # Camel-cased — beast.js defines PostForm.editPost, not edit_post.
+    expect(response.body).to include("PostForm.editPost(#{@post.id})")
+  end
+end

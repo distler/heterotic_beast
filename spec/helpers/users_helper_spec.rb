@@ -6,6 +6,9 @@ include AuthenticatedTestHelper
 describe UsersHelper do
   before do
     @user = mock_user
+    fake_request = double('request', remote_ip: '0.0.0.0')
+    allow(self).to receive(:request).and_return(fake_request) unless respond_to?(:request)
+    self.singleton_class.send(:define_method, :request) { fake_request }
   end
   
   describe "if_authorized" do 
@@ -81,7 +84,7 @@ describe UsersHelper do
 
   describe "link_to_current_user, When logged in" do
     before do
-      stub!(:current_user).and_return(@user)
+      stub(:current_user).and_return(@user)
     end
     it "should link to the given user" do
       should_receive(:user_path).at_least(:once).and_return('/users/1')
@@ -114,7 +117,7 @@ describe UsersHelper do
 
   describe "link_to_current_user, When logged out" do
     before do
-      stub!(:current_user).and_return(nil)
+      stub(:current_user).and_return(nil)
     end
     it "should link to the login_path" do
       link_to_current_user().should have_tag("a[href='/login']")

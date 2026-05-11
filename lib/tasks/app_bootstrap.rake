@@ -2,16 +2,33 @@ namespace :app do
   task :bootstrap => :setup do
     Debugger.start if Kernel.const_defined?(:Debugger)
     say "Bootstrapping #{@app_name}..."
-    
+
     puts
     say "1) Create database.yml config file."
     say "2) Load Database Schema."
-    say "3) Setup the Application Database."
+    say "3) Generate cookie session secret."
+    say "4) Setup the Application Database."
     puts
 
-    %w(database_config database_schema app_specific finished).each do |task|
+    %w(database_config database_schema secret_key_base app_specific finished).each do |task|
       Rake::Task["app:#{task}"].invoke
     end
+  end
+
+  desc 'Generate the `secret` file at the repo root (cookie session signing key) if missing.'
+  task :secret_key_base => :setup do
+    secret_file = Rails.root.join('secret')
+    if File.exist?(secret_file) && File.read(secret_file).strip.length >= 32
+      say "config: secret file already present (length=#{File.read(secret_file).strip.length})."
+    else
+      require 'securerandom'
+      key = SecureRandom.hex(64)
+      File.write(secret_file, key)
+      File.chmod(0600, secret_file) rescue nil
+      say "config: wrote a new 128-char secret to #{secret_file}."
+      say "        (file is gitignored. Deleting it invalidates all signed cookies.)"
+    end
+    puts
   end
 
   task :database_config do
