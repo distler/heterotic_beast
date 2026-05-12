@@ -10,8 +10,7 @@ class ApplicationController < ActionController::Base
   before_action :login_required, :only => [:new, :edit, :create, :update, :destroy]
 
   # See ActionController::RequestForgeryProtection for details
-  # Uncomment the :secret if you're not using the cookie session store
-  protect_from_forgery # :secret => 'e125a4be589f9d81263920581f6e4182'
+  protect_from_forgery with: :exception
 
   # raised in #current_site
   rescue_from Site::UndefinedError do |e|
