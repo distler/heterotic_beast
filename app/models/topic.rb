@@ -104,8 +104,8 @@ class Topic < ApplicationRecord
     def set_post_forum_id
       return unless @old_forum_id
       posts.update_all(:forum_id => forum_id)
-      Forum.where(:id => @old_forum_id).update_all("posts_count = posts_count - #{posts_count}")
-      Forum.where(:id => forum_id).update_all("posts_count = posts_count + #{posts_count}")
+      Forum.where(:id => @old_forum_id).update_all(["posts_count = posts_count - ?", posts_count])
+      Forum.where(:id => forum_id).update_all(["posts_count = posts_count + ?", posts_count])
       Forum.where(:id => @old_forum_id).update_all("topics_count = topics_count - 1")
       Forum.where(:id => forum_id).update_all("topics_count = topics_count + 1")
     end
@@ -115,10 +115,10 @@ class Topic < ApplicationRecord
     end
 
     def update_cached_forum_and_user_counts
-      Forum.where(:id => forum_id).update_all("posts_count = posts_count - #{posts_count}")
-      Site.where(:id => site_id).update_all("posts_count = posts_count - #{posts_count}")
+      Forum.where(:id => forum_id).update_all(["posts_count = posts_count - ?", posts_count])
+      Site.where(:id => site_id).update_all(["posts_count = posts_count - ?", posts_count])
       @user_posts.each do |user_id, posts|
-        User.where(:id => user_id).update_all("posts_count = posts_count - #{posts.size}")
+        User.where(:id => user_id).update_all(["posts_count = posts_count - ?", posts.size])
       end
     end
 end
