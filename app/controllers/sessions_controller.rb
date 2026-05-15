@@ -30,7 +30,7 @@ class SessionsController < ApplicationController
       if @current_user = current_site.users.authenticate(name, password)
         successful_login
       else
-        failed_login I18n.t('txt.invalid_login', :default => "Invalid login")
+        failed_login I18n.t('txt.invalid_login', :default => "Invalid login. If you continue having trouble, please reset your password by clicking on the link below.")
      end
     end
 
