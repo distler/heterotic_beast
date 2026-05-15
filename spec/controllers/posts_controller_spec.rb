@@ -178,7 +178,7 @@ describe PostsController, "POST #create" do
     act! { post :create, :forum_id => @forum.to_param, :topic_id => @topic.to_param, :post => {:body => ''}, :format => 'xml' }
 
     it_assigns :post, :forum, :topic, :parent => lambda { @topic }
-    it_renders :xml, :status => :unprocessable_entity
+    it_renders :xml, :status => :unprocessable_content
   end
 end
 
@@ -214,7 +214,7 @@ describe PostsController, "PUT #update" do
     act! { put :update, :forum_id => @forum.to_param, :topic_id => @topic.to_param, :id => @post.to_param, :post => {:body => ''}, :format => 'xml' }
     
     it_assigns :post, :forum, :topic, :parent => lambda { @topic }
-    it_renders :xml, :status => :unprocessable_entity
+    it_renders :xml, :status => :unprocessable_content
   end
 end
 

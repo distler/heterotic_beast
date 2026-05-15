@@ -38,7 +38,7 @@ describe ModeratorshipsController, "POST #create" do
     act! { post :create, :moderatorship => @attributes.merge('forum_id' => ''), :format => 'xml' }
     
     it_assigns :moderatorship
-    it_renders :xml, :status => :unprocessable_entity do
+    it_renders :xml, :status => :unprocessable_content do
       assigns(:moderatorship).errors.to_hash.to_xml
     end
   end

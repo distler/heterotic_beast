@@ -140,7 +140,7 @@ describe ForumsController, "POST #create" do
     act! { post :create, :forum => {:name => ''}, :format => 'xml' }
     
     it_assigns :forum
-    it_renders :xml, :status => :unprocessable_entity
+    it_renders :xml, :status => :unprocessable_content
   end
 end
 
@@ -182,7 +182,7 @@ describe ForumsController, "PUT #update" do
     act! { put :update, :id => @forum.to_param, :forum => {:name => ''}, :format => 'xml' }
 
     it_assigns :forum
-    it_renders :xml, :status => :unprocessable_entity
+    it_renders :xml, :status => :unprocessable_content
   end
 end
 

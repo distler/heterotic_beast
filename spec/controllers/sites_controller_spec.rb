@@ -128,7 +128,7 @@ describe SitesController, "POST #create" do
     act! { post :create, :site => {:name => ''}, :format => 'xml' }
     
     it_assigns :site
-    it_renders :xml, :status => :unprocessable_entity
+    it_renders :xml, :status => :unprocessable_content
   end
 end
 
@@ -169,7 +169,7 @@ describe SitesController, "PUT #update" do
     act! { put :update, :id => @site.to_param, :site => {:name => ''}, :format => 'xml' }
     
     it_assigns :site
-    it_renders :xml, :status => :unprocessable_entity
+    it_renders :xml, :status => :unprocessable_content
   end
 end
 

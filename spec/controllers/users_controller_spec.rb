@@ -210,7 +210,7 @@ describe UsersController, "PUT #update" do
     act! { put :update, :id => @user.id, :user => {:email => ''}, :format => 'xml' }
     
     it_assigns :user
-    it_renders :xml, :status => :unprocessable_entity do
+    it_renders :xml, :status => :unprocessable_content do
       assigns(:user).errors.to_hash.to_xml
     end
   end

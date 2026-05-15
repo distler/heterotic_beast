@@ -57,9 +57,7 @@
       :error => {
         :header_message => ["Couldn't save this %{object_name}: 1 error", "Couldn't save this %{object_name}: %{count} errors."],
         :message => "Please check the following fields:"
-      }
-    },
-    :active_record => {
+      },
       :error_messages => {
         :inclusion => "is not included in the list",
         :exclusion => "is not available",

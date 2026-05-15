@@ -52,7 +52,7 @@ class TopicsController < ApplicationController
     respond_to do |format|
       if @topic.new_record?
         format.html { render :action => "new" }
-        format.xml  { render :xml  => @topic.errors.to_hash, :status => :unprocessable_entity }
+        format.xml  { render :xml  => @topic.errors.to_hash, :status => :unprocessable_content }
       else
         flash[:notice] = 'Topic was successfully created.'
         format.html { redirect_to(forum_topic_path(@forum, @topic)) }
@@ -70,7 +70,7 @@ class TopicsController < ApplicationController
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml  => @topic.errors.to_hash, :status => :unprocessable_entity }
+        format.xml  { render :xml  => @topic.errors.to_hash, :status => :unprocessable_content }
       end
     end
   end

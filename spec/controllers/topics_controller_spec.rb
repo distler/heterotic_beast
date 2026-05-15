@@ -199,7 +199,7 @@ describe TopicsController, "POST #create" do
     act! { post :create, :forum_id => @forum.to_param, :topic => {}, :format => 'xml' }
 
     it_assigns :forum, :topic
-    it_renders :xml, :status => :unprocessable_entity
+    it_renders :xml, :status => :unprocessable_content
   end
 end
 
@@ -250,7 +250,7 @@ describe TopicsController, "PUT #update" do
     end
     
     it_assigns :topic, :forum
-    it_renders :xml, :status => :unprocessable_entity do
+    it_renders :xml, :status => :unprocessable_content do
       assigns(:topic).errors.to_hash.to_xml
     end
   end
