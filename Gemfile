@@ -12,7 +12,8 @@ gem 'will_paginate', :git => 'https://github.com/distler/will_paginate.git'
 gem "itextomml", ">=1.5.1"
 gem 'puma'
 gem 'sass-rails', "~> 6.0"
-gem 'uglifier'
+gem 'terser'      # ES6+ JS minifier; Uglifier was unmaintained since 2018 and chokes on `const`/`let`/arrow fns.
+gem 'mini_racer'  # Embedded V8 for ExecJS — keeps the JS runtime in-process so we don't depend on a system Node.
 gem 'httparty'
 
 # Rails 4 extracted these from core:

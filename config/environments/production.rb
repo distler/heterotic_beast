@@ -11,7 +11,7 @@ AlteredBeast::Application.configure do
   config.eager_load    = true
 
   # Compress JavaScripts and CSS
-  config.assets.js_compressor  = :uglifier
+  config.assets.js_compressor  = :terser
   config.assets.css_compressor = :sass
   # Fall back to building any asset that wasn't precompiled
   config.assets.compile = true
