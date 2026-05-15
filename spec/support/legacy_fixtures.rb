@@ -116,9 +116,15 @@ module LegacyFixtures
     # bunch of legacy assertions). Mirrors the original model_stubbing
     # plugin's behavior of treating the topic's initial post as the
     # default fixture.
+    #
+    # `reorder(:id)` is load-bearing: Topic.has_many :posts orders by
+    # `created_at`, but factory-created posts can declare a `created_at`
+    # in the past (e.g. `posts(:second)` at 2007), so the default order
+    # would put them ahead of the real initial post. The initial post is
+    # always the first row by id.
     def build_default(model, name)
       if model == :post && name == :default
-        fetch_for(:topic, :default).posts.first
+        fetch_for(:topic, :default).posts.reorder(:id).first
       else
         FactoryBot.create(factory_sym(model, name))
       end

@@ -89,8 +89,12 @@ describe Site, "#users" do
   end
   
   it "finds only active users in the correct site" do
-    sites(:default).users.sort_by(&:login).should == [users(:activated), users(:default)]
-    sites(:other).users.should   == [users(:other)]
+    # define_models pre-creates users(:admin) and users(:default) on
+    # sites(:default); reference users(:activated) before the LHS
+    # evaluates so it's also present in the DB.
+    expected = [users(:activated), users(:admin), users(:default)]
+    sites(:default).users.sort_by(&:login).should == expected
+    sites(:other).users.should == [users(:other)]
   end
   
   it "finds all users" do

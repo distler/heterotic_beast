@@ -59,7 +59,7 @@ describe Post, "being deleted" do
   it "fixes #last_post" do
     topics(:default).recent_post.should == posts(:default)
     posts(:default).destroy
-    topics(:default).recent_post(true).should == posts(:second)
+    topics(:default).reload_recent_post.should == posts(:second)
   end
 end
 

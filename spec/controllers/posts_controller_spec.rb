@@ -152,7 +152,9 @@ describe PostsController, "POST #create" do
     act! { post :create, :forum_id => @forum.to_param, :topic_id => @topic.to_param, :post => {:body => 'foo'} }
 
     it_assigns :post, :forum, :topic, :parent => lambda { @topic }, :flash => { :notice => :not_nil }
-    it_redirects_to { forum_topic_post_path(@forum, @topic, assigns(:post), :anchor => "post_#{assigns(:post).id}") }
+    # Modern controller redirects to the topic page with a #post_X anchor
+    # (and the relevant page number), not to a standalone post URL.
+    it_redirects_to { forum_topic_path(@forum, @topic, :anchor => "post_#{assigns(:post).id}", :page => 1) }
   end
 
   describe PostsController, "(unsuccessful creation)" do
@@ -188,7 +190,7 @@ describe PostsController, "PUT #update" do
     act! { put :update, :forum_id => @forum.to_param, :topic_id => @topic.to_param, :id => @post.to_param, :post => {} }
     
     it_assigns :post, :forum, :topic, :parent => lambda { @topic }, :flash => { :notice => :not_nil }
-    it_redirects_to { forum_topic_path(@forum, @topic, :anchor => "post_#{@post.id}") }
+    it_redirects_to { forum_topic_path(@forum, @topic, :anchor => "post_#{@post.id}", :page => 1) }
   end
 
   describe PostsController, "(unsuccessful save)" do
@@ -219,6 +221,12 @@ end
 describe PostsController, "DELETE #destroy" do
   include PostsControllerParentObjects
   act! { delete :destroy, :forum_id => @forum.to_param, :topic_id => @topic.to_param, :id => @post.to_param }
+
+  # Ensure the topic has more than one post so destroying @post doesn't
+  # destroy the topic (Topic#update_cached_post_fields destroys the
+  # topic when its last post is deleted). Otherwise the redirect lands
+  # on @forum, not forum_topic_path.
+  before { FactoryBot.create(:post, topic: @topic, user: @user, forum: @forum, site: @forum.site, body: 'second') }
 
   it_assigns :post, :forum, :topic, :parent => lambda { @topic }
   it_redirects_to { forum_topic_path(@forum, @topic) }

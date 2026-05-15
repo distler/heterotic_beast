@@ -103,11 +103,15 @@ class Topic < ApplicationRecord
 
     def set_post_forum_id
       return unless @old_forum_id
+      # Posts' forum_id needs a manual update_all (bypassing callbacks)
+      # and a corresponding manual posts_count fix-up on both forums —
+      # update_all on Post bypasses the `belongs_to :forum,
+      # counter_cache: true` machinery. topics_count, on the other
+      # hand, *is* handled by the counter_cache on this Topic's own
+      # `belongs_to :forum`; don't double-count by adjusting it here.
       posts.update_all(:forum_id => forum_id)
       Forum.where(:id => @old_forum_id).update_all(["posts_count = posts_count - ?", posts_count])
       Forum.where(:id => forum_id).update_all(["posts_count = posts_count + ?", posts_count])
-      Forum.where(:id => @old_forum_id).update_all("topics_count = topics_count - 1")
-      Forum.where(:id => forum_id).update_all("topics_count = topics_count + 1")
     end
 
     def count_user_posts_for_counter_cache
@@ -115,8 +119,16 @@ class Topic < ApplicationRecord
     end
 
     def update_cached_forum_and_user_counts
-      Forum.where(:id => forum_id).update_all(["posts_count = posts_count - ?", posts_count])
-      Site.where(:id => site_id).update_all(["posts_count = posts_count - ?", posts_count])
+      # `posts_count` (the counter cache attribute) is stale on the
+      # in-memory topic — the post counter is incremented via SQL
+      # `UPDATE`, never refreshed on the object. By after_destroy time
+      # the posts table has already cascade-deleted (dependent:
+      # :delete_all), so `posts.count` returns 0 too. Use the snapshot
+      # captured in `before_destroy`, which still reflects pre-destroy
+      # reality.
+      destroyed_post_count = @user_posts.values.sum(&:size)
+      Forum.where(:id => forum_id).update_all(["posts_count = posts_count - ?", destroyed_post_count])
+      Site.where(:id => site_id).update_all(["posts_count = posts_count - ?", destroyed_post_count])
       @user_posts.each do |user_id, posts|
         User.where(:id => user_id).update_all(["posts_count = posts_count - ?", posts.size])
       end

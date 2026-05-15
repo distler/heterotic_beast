@@ -19,7 +19,7 @@ class Monitorship < ApplicationRecord
       if monitorship
         monitorship.active = true
         monitorship.save
-        false
+        throw :abort
       end
     end
 end

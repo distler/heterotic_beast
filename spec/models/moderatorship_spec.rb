@@ -57,6 +57,16 @@ end
 describe Forum, "#moderators" do
   define_models :moderators
 
+  before do
+    # `define_models :moderators` was a legacy plugin keyword that
+    # pre-seeded these three records; the modern shim doesn't, so
+    # create them explicitly. Two forums × two users, except (other
+    # user, other forum) which the tests don't expect.
+    Moderatorship.create!(user: users(:default), forum: forums(:default))
+    Moderatorship.create!(user: users(:default), forum: forums(:other))
+    Moderatorship.create!(user: users(:other),   forum: forums(:default))
+  end
+
   it "finds moderators for forum" do
     forums(:default).moderators.sort_by(&:login).should == [users(:default), users(:other)]
     forums(:other).moderators.should == [users(:default)]
@@ -65,6 +75,12 @@ end
 
 describe User, "#forums" do
   define_models :moderators
+
+  before do
+    Moderatorship.create!(user: users(:default), forum: forums(:default))
+    Moderatorship.create!(user: users(:default), forum: forums(:other))
+    Moderatorship.create!(user: users(:other),   forum: forums(:default))
+  end
 
   it "finds forums for users" do
     users(:default).forums.sort_by(&:name).should == [forums(:default), forums(:other)]

@@ -15,7 +15,12 @@ class Post < ApplicationRecord
   belongs_to :site, :counter_cache => true
 
   validates_presence_of :user_id, :site_id, :topic_id, :forum_id, :body
-  validate :topic_is_not_locked
+  # Only enforce on create — the intent is "can't add a NEW post to a
+  # locked topic". On update, the topic was already lockable when the
+  # post existed, and Rails revalidates persisted posts during autosave;
+  # a post-create autosave would otherwise fail because the counter
+  # cache has already ticked to >= 1.
+  validate :topic_is_not_locked, on: :create
 
   after_create  :update_cached_fields
   after_update  :update_cached_fields
