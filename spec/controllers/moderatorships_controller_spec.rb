@@ -39,7 +39,7 @@ describe ModeratorshipsController, "POST #create" do
     
     it_assigns :moderatorship
     it_renders :xml, :status => :unprocessable_entity do
-      assigns(:moderatorship).errors.to_xml
+      assigns(:moderatorship).errors.to_hash.to_xml
     end
   end
 end

@@ -24,11 +24,16 @@ class TopicsController < ApplicationController
         (session[:topics] ||= {})[@topic.id] = Time.now.utc
       end
       @topic.hit! unless logged_in? && @topic.user_id == current_user.id
-      @posts = @topic.posts.paginate :page => current_page
-      @post  = Post.new
-      format.html { set_content_type_header }
-      format.js
-      format.xml  { render :xml  => @topic }
+      format.html do
+        @posts = @topic.posts.paginate :page => current_page
+        @post  = Post.new
+        set_content_type_header
+      end
+      format.js do
+        @posts = @topic.posts.paginate :page => current_page
+        @post  = Post.new
+      end
+      format.xml { render :xml => @topic }
     end
   end
 
@@ -47,7 +52,7 @@ class TopicsController < ApplicationController
     respond_to do |format|
       if @topic.new_record?
         format.html { render :action => "new" }
-        format.xml  { render :xml  => @topic.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml  => @topic.errors.to_hash, :status => :unprocessable_entity }
       else
         flash[:notice] = 'Topic was successfully created.'
         format.html { redirect_to(forum_topic_path(@forum, @topic)) }
@@ -65,7 +70,7 @@ class TopicsController < ApplicationController
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml  => @topic.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml  => @topic.errors.to_hash, :status => :unprocessable_entity }
       end
     end
   end

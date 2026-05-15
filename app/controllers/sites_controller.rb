@@ -52,7 +52,7 @@ class SitesController < ApplicationController
         format.xml  { render :xml => @site, :status => :created, :location => @site }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @site.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @site.errors.to_hash, :status => :unprocessable_entity }
       end
     end
   end
@@ -66,7 +66,7 @@ class SitesController < ApplicationController
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @site.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @site.errors.to_hash, :status => :unprocessable_entity }
       end
     end
   end

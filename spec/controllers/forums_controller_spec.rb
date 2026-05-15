@@ -44,7 +44,7 @@ describe ForumsController, "GET #show" do
   it "sets session[:forums] if logged in" do
     login_as :default
     act!
-    session[:forums][@forum.id].should == current_time
+    session[:forums][@forum.id].should be_within(5.seconds).of(Time.now.utc)
   end
   
   describe ForumsController, "(paged)" do

@@ -211,7 +211,7 @@ describe UsersController, "PUT #update" do
     
     it_assigns :user
     it_renders :xml, :status => :unprocessable_entity do
-      assigns(:user).errors.to_xml
+      assigns(:user).errors.to_hash.to_xml
     end
   end
 end

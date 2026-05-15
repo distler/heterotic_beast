@@ -22,17 +22,14 @@ class ForumsController < ApplicationController
     (session[:forums] ||= {})[@forum.id] = Time.now.utc
     (session[:forums_page] ||= Hash.new(1))[@forum.id] = current_page if current_page > 1
     @monitored = logged_in? && params[:monitored]
-    @topics ||= @forum.topics.paginate :page => current_page
-    @monitored_topics ||= logged_in? ? 
-        (@forum.monitored_topics(current_user).paginate :page => current_page) :
-        nil
 
     respond_to do |format|
       format.html do # show.html.erb
+        load_topics_for_show
         set_content_type_header
       end
-      format.xml  { render :xml => @forum }
-      format.js
+      format.xml { render :xml => @forum }
+      format.js  { load_topics_for_show }
     end
   end
   
@@ -63,7 +60,7 @@ class ForumsController < ApplicationController
         format.xml  { render :xml => @forum, :status => :created, :location => @forum }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @forum.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @forum.errors.to_hash, :status => :unprocessable_entity }
       end
     end
   end
@@ -79,7 +76,7 @@ class ForumsController < ApplicationController
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @forum.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @forum.errors.to_hash, :status => :unprocessable_entity }
       end
     end
   end
@@ -103,5 +100,12 @@ class ForumsController < ApplicationController
 
     def forum_params
       params.fetch(:forum, {}).permit(:name, :description, :state, :position)
+    end
+
+    def load_topics_for_show
+      @topics ||= @forum.topics.paginate :page => current_page
+      @monitored_topics ||= logged_in? ?
+        (@forum.monitored_topics(current_user).paginate :page => current_page) :
+        nil
     end
 end

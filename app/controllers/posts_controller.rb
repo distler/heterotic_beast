@@ -48,7 +48,7 @@ class PostsController < ApplicationController
     respond_to do |format|
       if @post.new_record?
         format.html { redirect_to forum_topic_path(@forum, @topic) }
-        format.xml  { render :xml  => @post.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml  => @post.errors.to_hash, :status => :unprocessable_entity }
       else
         flash[:notice] = 'Post was successfully created.'
         format.html { redirect_to(forum_topic_path(@forum, @topic, {:anchor => dom_id(@post), :page => @topic.last_page})) }
@@ -65,7 +65,7 @@ class PostsController < ApplicationController
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml  => @post.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml  => @post.errors.to_hash, :status => :unprocessable_entity }
       end
     end
   end
