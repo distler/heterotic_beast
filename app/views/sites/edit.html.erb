@@ -2,7 +2,7 @@
   <%= link_to I18n.t('txt.sites', :default => 'Sites'), sites_path %> <span class="arrow">&#x2192;</span>
 </div>
 
-<h1><%= link_to I18n.t('txt.views_sites.edit', :default => 'Edit site') %></h1>
+<h1><%= I18n.t('txt.views_sites.edit', :default => 'Edit site') %></h1>
 
 <%= form_for @site do |f| %>
   <%= render :partial => "form", :object => f %>

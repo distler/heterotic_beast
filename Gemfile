@@ -5,7 +5,7 @@ gem 'test-unit'
 gem 'ruby-openid', '>= 2.0.4', :require => "openid"
 gem 'rexml'  # extracted from Ruby stdlib in 3.0; ruby-openid 2.x still requires it
 gem 'pstore' # extracted from Ruby stdlib in 4.0; maruku's blahtex math engine requires it
-gem 'cgi'    # extracted from Ruby stdlib in 4.0; sessions_controller_spec uses CGI::Cookie
+gem 'cgi'    # extracted from Ruby stdlib in 4.0; rails-deprecated_sanitizer / actionpack require it
 gem 'rack-openid'
 gem 'open_id_authentication'
 gem 'will_paginate', :git => 'https://github.com/distler/will_paginate.git'

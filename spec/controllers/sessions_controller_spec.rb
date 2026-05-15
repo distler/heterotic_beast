@@ -6,7 +6,7 @@ describe SessionsController, "POST /create" do
   before do
     @login = {
       :user    => :default,
-      :pass    => 'test',
+      :pass    => 'test99',
       :options => {}}
   end
   
@@ -66,30 +66,22 @@ describe SessionsController, "(cookies)" do
 
   it 'logs in with cookie' do
     users(:default).remember_me
-    request.cookies["auth_token"] = cookie_for(:default)
+    request.cookies["auth_token"] = users(:default).remember_token
     get :new
     controller.send(:logged_in?).should be_true
   end
-  
+
   it 'fails expired cookie login' do
     users(:default).remember_me_until 5.minutes.ago.utc
-    request.cookies["auth_token"] = cookie_for(:default)
-    get :new
-    controller.send(:logged_in?).should_not be_true
-  end
-  
-  it 'fails cookie login' do
-    users(:default).remember_me
-    request.cookies["auth_token"] = auth_token('invalid_auth_token')
+    request.cookies["auth_token"] = users(:default).remember_token
     get :new
     controller.send(:logged_in?).should_not be_true
   end
 
-  def auth_token(token)
-    CGI::Cookie.new('name' => 'auth_token', 'value' => token)
-  end
-    
-  def cookie_for(user)
-    auth_token users(user).remember_token
+  it 'fails cookie login' do
+    users(:default).remember_me
+    request.cookies["auth_token"] = 'invalid_auth_token'
+    get :new
+    controller.send(:logged_in?).should_not be_true
   end
 end
