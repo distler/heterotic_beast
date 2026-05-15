@@ -1,12 +1,9 @@
 require 'html_formatting'
 
 class ActiveRecord::Base
-  @@white_list_sanitizer = Rails::Html::WhiteListSanitizer.new
   class << self
     attr_accessor :formatted_attributes
   end
-
-  cattr_reader :white_list_sanitizer
 
   def self.formats_attributes(*attributes)
     (self.formatted_attributes ||= []).push *attributes

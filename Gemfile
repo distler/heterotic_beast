@@ -16,9 +16,8 @@ gem 'terser'      # ES6+ JS minifier; Uglifier was unmaintained since 2018 and c
 gem 'mini_racer'  # Embedded V8 for ExecJS — keeps the JS runtime in-process so we don't depend on a system Node.
 gem 'httparty'
 
-# Rails 4 extracted these from core:
-gem 'rails-deprecated_sanitizer'     # restores HTML::Tokenizer / WhiteListSanitizer
-gem 'activemodel-serializers-xml'    # `.to_xml` extracted from Active{Model,Record} in Rails 5
+# Rails 5 extracted `.to_xml` from Active{Model,Record}:
+gem 'activemodel-serializers-xml'
 
 gem 'bcrypt', '~> 3.1'
 gem 'acts_as_list'
