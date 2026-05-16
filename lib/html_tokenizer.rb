@@ -36,9 +36,12 @@ module HTML #:nodoc:
 
     # Create a new Tokenizer for the given text.
     def initialize(text)
-      # `.encode` (not `.encode!`) so a frozen input doesn't blow up; we
-      # don't need to mutate the caller's string.
-      @scanner = StringScanner.new(text.encode)
+      # `.dup` (not `.encode!`) so a frozen input doesn't blow up; we don't
+      # need to mutate the caller's string. `.encode` is wrong here — with
+      # no arguments it transcodes to `Encoding.default_internal` if that
+      # happens to be set, which can corrupt astral-plane characters
+      # (U+1D538 etc.) when the target encoding can't represent them.
+      @scanner = StringScanner.new(text.dup)
       @position = 0
       @line = 0
       @current_line = 1
